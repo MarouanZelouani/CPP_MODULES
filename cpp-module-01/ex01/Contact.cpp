@@ -1,69 +1,54 @@
-#include <iostream>
-#include <string>
+#include "Contact.hpp"
 
-using namespace std;
+Contact::Contact(){}
+Contact::~Contact(){}
 
-class Contact
+void Contact::setFirstName(std::string name) 
 {
-private:
-    string firstName;
-    string lastName;
-    string nickName;
-    string phoneNumber;
-    string dakestSecret;
-    
-public:
+    this->firstName = name;
+}
 
-    Contact(){}
-    ~Contact(){}
+std::string Contact::getFisrstName() 
+{
+    return this->firstName;
+}
 
-    void setFirstName(string name) 
-    {
-        this->firstName = name;
-    }
+void Contact::setLastName(std::string name)
+{
+    this->lastName = name;
+}
 
-    string getFisrstName() 
-    {
-        return this->firstName;
-    }
+std::string Contact::getLastName()
+{
+    return this->lastName;
+}
 
-    void setLastName(string name)
-    {
-        this->lastName = name;
-    }
+void Contact::setNickName(std::string name)
+{
+    this->nickName = name;
+}
 
-    string getLastName()
-    {
-        return this->lastName;
-    }
+std::string Contact::getNickName()
+{
+    return this->nickName;
+}
 
-    void setNickName(string name)
-    {
-        this->nickName = name;
-    }
+void Contact::setPhoneNumber(std::string number)
+{
+    this->phoneNumber = number;
+}
 
-    string getNickName()
-    {
-        return this->nickName;
-    }
+std::string Contact::getPhoneNumber()
+{
+    return this->phoneNumber;
+}
 
-    void setPhoneNumber(string number)
-    {
-        this->phoneNumber = number;
-    }
+void Contact::setDarkestSecret(std::string secret)
+{
+    this->dakestSecret = secret;
+}
 
-    string getPhoneNumber()
-    {
-        return this->phoneNumber;
-    }
-
-    void setDarkestSecret(string secret)
-    {
-        this->dakestSecret = secret;
-    }
-
-    string getDarkestSecret()
-    {
-        return this->dakestSecret;
-    }
-};
+std::string Contact::getDarkestSecret()
+{
+    return this->dakestSecret;
+}

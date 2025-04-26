@@ -1,4 +1,4 @@
-NAME = magaphone
+NAME = megaphone
 CC = c++ -Wextra -Werror -Wall
 SRC = megaphone
 OBJ = $(SRC:=.o)

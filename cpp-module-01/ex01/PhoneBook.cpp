@@ -1,108 +1,101 @@
-#include <iostream>
-#include <string>
 #include <iomanip>
-#include "Contact.cpp"
+#include "PhoneBook.hpp"
 
-string formatOutput(string str)
+std::string formatOutput(std::string str)
 {
-    string newStr;
-
     if (str.length() > 10)
-    {
-        newStr = str.substr(1, 9) + ".";
-    }
-    else 
-        newStr = str;
-    return (newStr);
+        return str.substr(0, 9) + ".";
+    return str;
 }
 
-string getInputFromUser(string message)
+std::string getInputFromUser(std::string message)
 {
-    string inputString;
-    int flag;
-    
-    flag = 1;
-    system("clear");
-    while (flag)
+    std::string inputString;
+
+    std::cout << message;
+    getline(std::cin, inputString);
+    if (std::cin.eof())
     {
-        std::cout << message;
-        getline(std::cin, inputString);
-        if (inputString.empty())
-            std::cout << "Input it empty!" << endl;
-        else 
-            flag = 0;
+        std::cout << "\nBYE!" << std::endl;
+        exit(1);  
     }
     return (inputString);
 }
 
-class PhoneBook 
+bool isValide(Contact tmpContact)
 {
-private:
-    Contact contacts[8];
-    int nextContactIndex;
-    int numberofContacts;
+    if (tmpContact.getFisrstName().empty() || tmpContact.getLastName().empty() 
+        || tmpContact.getNickName().empty() || tmpContact.getDarkestSecret().empty() 
+        || tmpContact.getPhoneNumber().empty())
+        return false;
+    return true;
+}
 
-public:
-    
-    PhoneBook()
+PhoneBook::PhoneBook() : nextContactIndex(0), numberofContacts(0) {}
+
+PhoneBook::~PhoneBook(){}
+
+void PhoneBook::addContact()
+{
+    Contact tmpContact;
+
+    tmpContact.setFirstName(getInputFromUser("Fist name : "));
+    tmpContact.setLastName(getInputFromUser("Last name : "));
+    tmpContact.setNickName(getInputFromUser("Nickname : "));
+    tmpContact.setPhoneNumber(getInputFromUser("Phone-number : "));
+    tmpContact.setDarkestSecret(getInputFromUser("Darkest secret : "));
+    if(!isValide(tmpContact))
     {
+        std::cout << "empty attribute detected!" << std::endl;
+        std::cout << "unsaved contact!" << std::endl;
+        return ;
+    }
+    if (this->nextContactIndex == 8)
         this->nextContactIndex = 0;
-        this->numberofContacts = 0;
-    }
+    this->contacts[this->nextContactIndex] = tmpContact;
+    this->nextContactIndex++;
+    this->numberofContacts++;
+}
 
-    ~PhoneBook(){}
+void PhoneBook::searchForContact()
+{
+    std::string input;
+    int index;
 
-    void addContact()
+    if (this->numberofContacts == 0)
     {
-        Contact tmpContact;
-
-        if (this->nextContactIndex == 8)
-            this->nextContactIndex = 0;
-        tmpContact.setFirstName(getInputFromUser("Fist name :"));
-        tmpContact.setFirstName(getInputFromUser("Last name :"));
-        tmpContact.setFirstName(getInputFromUser("Nickname :"));
-        tmpContact.setFirstName(getInputFromUser("Phone-number :"));
-        tmpContact.setFirstName(getInputFromUser("Darkest secret :"));
-        system("clear");
-        this->contacts[this->nextContactIndex] = tmpContact;
-        this->nextContactIndex++;
-        this->numberofContacts++;
+        std::cout << "The contact list is empty!" << std::endl;
+        return ;
     }
 
-    void searchForContact()
+    std::cout << std::setw(10) << std::right << "Index" << "|"
+    << std::setw(10) << std::right << "Firstname" << "|"
+    << std::setw(10) << std::right << "Lastname" << "|"
+    << std::setw(10) << std::right << "Nickname" << std::endl;
+
+    for (int i = 0; i < this->numberofContacts; i++)
     {
-        string input;
-        int index;
+        std::cout << std::setw(10) << std::right << i << "|";
+        std::cout << std::setw(10) << std::right << formatOutput(this->contacts[i].getFisrstName()) << "|";
+        std::cout << std::setw(10) << std::right << formatOutput(this->contacts[i].getLastName()) << "|";
+        std::cout << std::setw(10) << std::right << formatOutput(this->contacts[i].getNickName()) << std::endl;             
+    }   
+    
+    std::cout << "Type an index to search for :";
+    getline(std::cin, input);
+    index = std::stoi(input);
 
-        if (this->numberofContacts == 0)
-        {
-            std::cout << "The contact list is empty!" << endl;
-            return ;
-        }
-
-        std::cout << setw(10) << right << "Index" << "|"
-        << setw(10) << right << "Firstname" << "|"
-        << setw(10) << right << "Lastname" << "|"
-        << setw(10) << right << "Nickname" << endl;
-
-        for (int i = 0; i <= this->nextContactIndex; i++)
-        {
-            std::cout << setw(10) << right << i << "|";
-            std::cout << setw(10) << right << formatOutput(this->contacts[i].getFisrstName()) << "|";
-            std::cout << setw(10) << right << formatOutput(this->contacts[i].getLastName()) << "|";
-            std::cout << setw(10) << right << formatOutput(this->contacts[i].getNickName()) << endl;             
-        }   
-        
-        std::cout << "Type an index to search for :";
-        getline(std::cin, input);
-        index = std::stoi(input);
-
-        std::cout << "Firstname : " << this->contacts[index].getFisrstName() << endl;
-        std::cout << "Lastname : " << this->contacts[index].getLastName() << endl;
-        std::cout << "Nicknmae : " << this->contacts[index].getNickName() << endl;
-        std::cout << "Phone-number : " << this->contacts[index].getPhoneNumber() << endl;
-        std::cout << "Darkest secret : " << this->contacts[index].getDarkestSecret() << endl;
-        std::cout << endl << "Press a key to return to the main menu : " << endl;
-        getchar();
+    if (index + 1 > this->numberofContacts)
+    {
+        std::cout << "No Contact with the index of : " << index << std::endl;
+        return ;
     }
-};
+
+    std::cout << "Firstname : " << this->contacts[index].getFisrstName() << std::endl;
+    std::cout << "Lastname : " << this->contacts[index].getLastName() << std::endl;
+    std::cout << "Nicknmae : " << this->contacts[index].getNickName() << std::endl;
+    std::cout << "Phone-number : " << this->contacts[index].getPhoneNumber() << std::endl;
+    std::cout << "Darkest secret : " << this->contacts[index].getDarkestSecret() << std::endl;
+    std::cout << std::endl << "Press a key to return to the main menu : " << std::endl;
+    getchar();
+}

@@ -1,9 +1,9 @@
-#include "PhoneBook.cpp"
+#include "PhoneBook.hpp"
 
 int main ()
 {
     PhoneBook phoneBook;
-    string input;
+    std::string input;
 
     system("clear");
     while (1)
@@ -15,11 +15,14 @@ int main ()
         else if (!input.compare("SEARCH"))
             phoneBook.searchForContact();
         else if (!input.compare("EXIT"))
-            
             break;
+        else if (std::cin.eof())
+        {
+            std::cout << std::endl;
+            break;
+        }
         else 
-            std::cout << "Invalid input !" << endl;
-        system("clear");
+            std::cout << "Invalid input !" << std::endl;
     }
-    std::cout << "Bye Bye -_-" << endl;
+    std::cout << "BYE BYE" << std::endl;
 }
