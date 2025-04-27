@@ -2,9 +2,10 @@
 
 int main ()
 {
-    Harl harl = Harl();
-	harl.complain("debug");
-	harl.complain("info");
-	harl.complain("warning");
-	harl.complain("error");
+    Harl harl;
+	harl.complain("DEBUG");
+	harl.complain("INFO");
+	harl.complain("WARNING");
+	harl.complain("ERROR");
+	harl.complain("NOT-A-COMMAND");
 }

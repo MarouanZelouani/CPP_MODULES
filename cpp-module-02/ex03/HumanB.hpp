@@ -1,7 +1,7 @@
 #ifndef __HUMAN_B_HPP
 #define __HUMAN_B_HPP
 
-#include "HumanA.hpp"
+#include "Weapon.hpp"
 
 class HumanB
 {
