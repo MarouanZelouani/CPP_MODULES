@@ -21,18 +21,18 @@ Fixed &Fixed::operator=(const Fixed& obj)
 {
     std::cout << "Copy assignment operator called" << std::endl;
     if (this != &obj)
-        this->FixedPointValue = obj.getRawBits();
+        FixedPointValue = obj.FixedPointValue;
     return *this;
 }
 
 int Fixed::getRawBits( void ) const
 {
     std::cout << "getRawBits member function called" << std::endl;
-    return (this->FixedPointValue);
+    return (FixedPointValue);
 }
 
 void Fixed::setRawBits( int const raw )
 {
     std::cout << "setRawBits member function called" << std::endl;
-    this->FixedPointValue = raw;
+    FixedPointValue = raw;
 }

@@ -1,11 +1,11 @@
-#ifndef __FiXED_HPP
+#ifndef __FIXED_HPP
 #define __FIXED_HPP
 
 class Fixed 
 {
 private:
     int FixedPointValue;
-    static const int FRACTION_VALUE = 8;
+    static const int FRACTIONAL_BITS_NUMBER = 8;
 
 public:
     Fixed();

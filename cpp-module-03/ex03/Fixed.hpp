@@ -1,4 +1,4 @@
-#ifndef __FiXED_HPP
+#ifndef __FIXED_HPP
 #define __FIXED_HPP
 
 #include <iostream>

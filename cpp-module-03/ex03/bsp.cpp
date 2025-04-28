@@ -10,8 +10,9 @@ Fixed calculateTriangleArea(Point const a, Point const b, Point const c)
     return  result / 2;
 }
 
-bool bsp( Point const a, Point const b, Point const c, Point const point)
+bool bsp( Point  a, Point  b, Point  c, Point  point)
 {
+    std::cout << "here!!!\n";
     Fixed Area_ABC = calculateTriangleArea(a, b, c);
     Fixed Area_PBC = calculateTriangleArea(point, b, c);
     Fixed Area_PCA = calculateTriangleArea(point, c, a);
