@@ -18,19 +18,19 @@ Point &Point::operator=(const Point& obj)
     return *this;
 }
 
-// void Point::setX(const Fixed& fp)
-// {
-//     this->x = fp;
-// }
-
-// void Point::setY(Fixed fp){}
+bool Point::operator==(const Point& point)
+{
+    if (this->x == point.x && this->y == point.y)
+        return true;
+    return false;
+}
 
 Fixed Point::getX() const
 {
-    return this->x;
+    return x;
 }
 
 Fixed Point::getY() const
 {
-    return this->y;
+    return y;
 }

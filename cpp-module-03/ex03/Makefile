@@ -1,6 +1,6 @@
 NAME = BSP
 CPP = c++ 
-CPPFLAGS = -Wextra -Werror -Wall -std=c++98 
+CPPFLAGS = -Wextra -Werror -Wall #-std=c++98 
 SRC = main.cpp bsp.cpp Fixed.cpp Point.cpp
 OBJ = $(SRC:.cpp=.o)
 
