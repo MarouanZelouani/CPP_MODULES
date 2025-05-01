@@ -13,11 +13,9 @@ public:
     Point();
     Point(const float f1, const float f2);
     Point(const Point& obj);
+    ~Point();
     Point &operator=(const Point& obj);
     bool operator==(const Point& point);
-    ~Point();
-    // void setX(Fixed fp);
-    // void setY(Fixed fp);
     Fixed getX() const; 
     Fixed getY() const;
 };

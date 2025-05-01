@@ -36,6 +36,9 @@ bool bsp( Point  a, Point  b, Point  c, Point  point)
     Fixed alpha = Area_PBC / Area_ABC;
     Fixed beta = Area_PCA / Area_ABC;
     Fixed omega = Area_PAB / Area_ABC;
+    Fixed sum = alpha + beta + omega;
+    Fixed epsilon(0.01f);
 
-    return alpha >= 0 && beta >= 0 && omega >= 0 && alpha + beta + omega == 1;
+    return alpha >= 0 && beta >= 0 && omega >= 0 && 
+       sum >= Fixed(1) - epsilon && sum <= Fixed(1) + epsilon;
 }
