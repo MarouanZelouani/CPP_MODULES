@@ -27,7 +27,7 @@ Fixed::Fixed(const Fixed& obj)
 Fixed &Fixed::operator=(const Fixed& obj)
 {
     if (this != &obj)
-        this->FixedPointValue = obj.FixedPointValue;
+        this->FixedPointValue = obj.getRawBits();
     return *this;
 }
 

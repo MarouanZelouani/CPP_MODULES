@@ -12,7 +12,6 @@ Fixed::~Fixed()
     std::cout << "Destructor called" << std::endl;
 }
 
-// Scaling factor 2^FRACTIONAL_BITS (1 << FRACTIONAL_BITS_NUMBER)
 Fixed::Fixed(const int x)
 {
     std::cout << "Int constructor called" << std::endl;
