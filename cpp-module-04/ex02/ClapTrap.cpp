@@ -6,20 +6,13 @@ ClapTrap::ClapTrap(std::string name)
     std::cout << "ClapTrap Default constructor called" << std::endl;
 }
 
-ClapTrap::ClapTrap(std::string name, int hit_p, int energy, int damage)
-    :   _name(name), _hit_p(hit_p), _energy_p(energy), _damage(damage)
-{
-    std::cout << "ClapTrap constructor called" << std::endl;
-}
-
 ClapTrap::~ClapTrap()
 {
     std::cout << "ClapTrap Destructor called" << std::endl;
 }
 
-ClapTrap::ClapTrap(const ClapTrap& obj)
+ClapTrap& ClapTrap::operator= (const ClapTrap& obj)
 {
-    std::cout << "Copy constructor called" << std::endl;
     if (this != &obj)
     {
         _name = obj._name;
@@ -27,6 +20,13 @@ ClapTrap::ClapTrap(const ClapTrap& obj)
         _energy_p = obj._energy_p;
         _damage = obj._damage;
     }
+    return *this;
+}
+
+ClapTrap::ClapTrap(const ClapTrap& obj)
+{
+    std::cout << "Copy constructor called" << std::endl;
+    *this = obj;
 }
 
 void ClapTrap::takeDamage(unsigned int amount)
@@ -38,26 +38,25 @@ void ClapTrap::takeDamage(unsigned int amount)
 
 void ClapTrap::beRepaired(unsigned int amount)
 {
-    if (!_energy_p)
+    if (_energy_p)
     {
-        std::cout << "No energy point left!, repairing faild!" << std::endl;
+        std::cout << "ClapTrap " << _name << " repaired himself!"  << std::endl;
+        _hit_p += amount;
+        _energy_p--;
         return ;
     }
-    std::cout << "ClapTrap " << _name << " repaired himself!"  << std::endl;
-    _hit_p += amount;
-    _energy_p--;
 }
 
 void ClapTrap::attack(const std::string& target)
 {
-    if (!_energy_p)
+    if (_energy_p)
     {
-        std::cout << "No energy point left!, attacking faild!" << std::endl;
+        std::cout << "ClapTrap " << _name << " attacks " << target << ", causing " 
+        << _damage << " points of damage!" << std::endl;
+        _energy_p--;
         return ;
     }
-    std::cout << "ClapTrap " << _name << " attacks " << target << ", causing " 
-    << _damage << " points of damage!" << std::endl;
-    _energy_p--;
+    std::cout << "No energy point left!, attacking faild!" << std::endl;
 }
 
 

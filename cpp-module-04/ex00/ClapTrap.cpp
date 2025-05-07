@@ -11,9 +11,8 @@ ClapTrap::~ClapTrap()
     std::cout << "Destructor called" << std::endl;
 }
 
-ClapTrap::ClapTrap(const ClapTrap& obj)
+ClapTrap& ClapTrap::operator= (const ClapTrap& obj)
 {
-    std::cout << "Copy constructor called" << std::endl;
     if (this != &obj)
     {
         _name = obj._name;
@@ -21,37 +20,45 @@ ClapTrap::ClapTrap(const ClapTrap& obj)
         _energy_p = obj._energy_p;
         _damage = obj._damage;
     }
+    return *this;
+}
+
+ClapTrap::ClapTrap(const ClapTrap& obj)
+{
+    std::cout << "Copy constructor called" << std::endl;
+    *this = obj;
 }
 
 void ClapTrap::takeDamage(unsigned int amount)
 {
     std::cout << "ClapTrap " << _name << " took damage " 
         << amount << " points!" << std::endl;
-    _hit_p -= amount;
+    if (_hit_p)
+        _hit_p -= amount;
 }
 
 void ClapTrap::beRepaired(unsigned int amount)
 {
-    if (!_energy_p)
+    if (_energy_p)
     {
-        std::cout << "No energy point left!, repairing faild!" << std::endl;
+        std::cout << "ClapTrap " << _name << " repaired himself!"  << std::endl;
+        _hit_p += amount;
+        _energy_p--;
         return ;
     }
-    std::cout << "ClapTrap " << _name << " repaired himself!"  << std::endl;
-    _hit_p += amount;
-    _energy_p--;
+    std::cout << "No energy point left!, repairing faild!" << std::endl;
 }
 
 void ClapTrap::attack(const std::string& target)
 {
-    if (!_energy_p)
+    if (_energy_p)
     {
-        std::cout << "No energy point left!, attacking faild!" << std::endl;
+        std::cout << "ClapTrap " << _name << " attacks " << target << ", causing " 
+        << _damage << " points of damage!" << std::endl;
+        _energy_p--;
         return ;
     }
-    std::cout << "ClapTrap " << _name << " attacks " << target << ", causing " 
-    << _damage << " points of damage!" << std::endl;
-    _energy_p--;
+    std::cout << "No energy point left!, attacking faild!" << std::endl;
 }
 
 
