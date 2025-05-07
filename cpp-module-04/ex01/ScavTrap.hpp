@@ -1,7 +1,7 @@
 #ifndef __SCAV_TRAP_HPP
 # define __SCAV_TRAP_HPP
 
-#include "ClapTrap.hpp";
+#include "ClapTrap.hpp"
 
 class ScavTrap : public ClapTrap
 {
@@ -12,6 +12,7 @@ public:
     ScavTrap& operator= (const ScavTrap& obj);
     void guardGate();
     void attack(const std::string& target);
+    // void printStatus();
 };
 
 #endif
