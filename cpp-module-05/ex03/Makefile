@@ -1,7 +1,7 @@
-NAME = DiamondTrap
+NAME = Animal
 CPP = c++ 
-CPPFLAGS = -Wextra -Werror -Wall -std=c++98 -Wshadow -Wno-shadow
-SRC = main.cpp ClapTrap.cpp ScavTrap.cpp FragTrap.cpp DiamondTrap.cpp
+CPPFLAGS = -Wextra -Werror -Wall -std=c++98 
+SRC = AMateria.cpp  Character.cpp  Cure.cpp  Ice.cpp  MateriaSource.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all : $(NAME)

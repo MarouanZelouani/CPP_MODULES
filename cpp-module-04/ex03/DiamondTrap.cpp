@@ -14,7 +14,7 @@ DiamondTrap::DiamondTrap (std::string name)
 
 DiamondTrap::~DiamondTrap()
 {
-    std::cout << "DiamondTrap DeConstructor called" << std::endl;
+    std::cout << "DiamondTrap Deconstructor called" << std::endl;
 }
 
 void DiamondTrap::attack(const std::string& target)
@@ -39,7 +39,7 @@ DiamondTrap::DiamondTrap(const DiamondTrap& obj)
         ScavTrap(obj),
         FragTrap(obj) 
 {
-    std::cout << "DiamondTrap DeConstructor called" << std::endl;
+    std::cout << "DiamondTrap Copy Constructor called" << std::endl;
     *this = obj;
 }
 

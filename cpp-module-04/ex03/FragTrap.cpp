@@ -34,7 +34,7 @@ FragTrap::FragTrap(const FragTrap& obj)
 
 void FragTrap::highFivesGuys(void)
 {
-    if (_energy_p)
+    if (_energy_p && _hit_p)
     {
         std::cout << "High Five please!!" << std::endl;
         _energy_p--;

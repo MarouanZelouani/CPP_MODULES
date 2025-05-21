@@ -34,7 +34,7 @@ ScavTrap::ScavTrap(const ScavTrap& obj)
 
 void ScavTrap::guardGate()
 {
-    if (_energy_p)
+    if (_energy_p && _hit_p)
     {
         std::cout << "ScavTrap " << _name <<  "activated Gate keeper mode!" << std::endl;
         _energy_p--;
@@ -45,13 +45,13 @@ void ScavTrap::guardGate()
 
 void ScavTrap::attack(const std::string& target)
 {
-    if (_energy_p)
+    if (_energy_p && _hit_p)
     {
         std::cout << "ScavTrap " << _name << " attacks " << target << ", causing " 
         << _damage << " points of damage!" << std::endl;
         _energy_p--;
         return ;
     }
-        std::cout << "No energy point left!, attacking faild!" << std::endl;
+    std::cout << "No energy point left!, attacking faild!" << std::endl;
 }
 
