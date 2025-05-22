@@ -1,7 +1,11 @@
 #ifndef _ICHARACTER_HPP__
 #define _ICHARACTER_HPP__
 
-#include "AMateria.hpp"
+// #include "AMateria.hpp"
+#include <string>
+#include <iostream>
+
+class AMateria; 
 
 class ICharacter
 {

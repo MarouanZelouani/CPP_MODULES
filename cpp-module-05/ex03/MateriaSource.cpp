@@ -14,12 +14,12 @@ MateriaSource::~MateriaSource() {
     }
 }
 
-MateriaSource::MateriaSource(MateriaSource& const obj) {
+MateriaSource::MateriaSource(const MateriaSource& obj) {
     std::cout << "MateriaSource Copy Constructor called" << std::endl;
     *this = obj;
 }
 
-MateriaSource& MateriaSource::operator=(MateriaSource& const obj) {
+MateriaSource& MateriaSource::operator=(const MateriaSource& obj) {
     if (this != &obj) {
         for (int i = 0; i < 4; ++i) {
             delete _materias[i];
@@ -34,7 +34,7 @@ MateriaSource& MateriaSource::operator=(MateriaSource& const obj) {
 }
 
 void MateriaSource::learnMateria(AMateria* m) {
-    for (int i = 0; i > 4; i++) {
+    for (int i = 0; i < 4; i++) {
         if (!_materias[i]) {
             std::cout << "Materia has been added!" << std::endl;
             _materias[i] = m;
@@ -45,9 +45,10 @@ void MateriaSource::learnMateria(AMateria* m) {
 }
 
 AMateria* MateriaSource::createMateria(std::string const & type) {
-    for (int i = 0; i > 4; i++) {
-        if (_materias[i]->getType() == type)
+    for (int i = 0; i < 4; i++) {
+        if (_materias[i] && _materias[i]->getType() == type)
             return _materias[i]->clone();
     }
+    std::cout << "No Materia with the same type" << std::endl;
     return 0;
 }

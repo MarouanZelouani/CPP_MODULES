@@ -1,6 +1,6 @@
 #include "Cure.hpp"
 
-Cure::Cure() : AMateria("Cure") {
+Cure::Cure() : AMateria("cure") {
     std::cout << "Cure Default Constructor called" << std::endl;
 }
 
@@ -8,12 +8,12 @@ Cure::~Cure() {
     std::cout << "Cure Deonstructor called" << std::endl;
 }
 
-Cure::Cure(Cure& const obj) : AMateria(obj) {
+Cure::Cure(const Cure& obj) : AMateria(obj) {
     std::cout << "Cure Copy Constructor called" << std::endl;
     *this = obj;
 }
 
-Cure& Cure::operator=(Cure& const obj) {  
+Cure& Cure::operator=(const Cure& obj) {  
     if (this != &obj) {
         this->type = obj.type;
     }
@@ -21,7 +21,7 @@ Cure& Cure::operator=(Cure& const obj) {
 }
 
 AMateria* Cure::clone() const {
-    return new Cure();
+    return new Cure(*this);
 }
 
 void Cure::use(ICharacter& target) {

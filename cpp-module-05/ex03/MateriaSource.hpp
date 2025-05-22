@@ -9,8 +9,9 @@ private:
     AMateria* _materias[4];
 public:
     MateriaSource();
-    MateriaSource(MateriaSource& const obj);
-    MateriaSource& operator=(MateriaSource& const obj);
+    ~MateriaSource();
+    MateriaSource(const MateriaSource& obj);
+    MateriaSource& operator=(const MateriaSource& obj);
     void learnMateria(AMateria* m);
     AMateria* createMateria(std::string const & type);
 };

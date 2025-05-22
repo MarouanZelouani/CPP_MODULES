@@ -5,12 +5,16 @@ AMateria::AMateria(std::string const & type) {
     this->type = type;
 }
 
-AMateria::AMateria(AMateria& const obj) {
+AMateria::~AMateria() {
+    std::cout << "Deconstructor called" << std::endl;
+}
+
+AMateria::AMateria(const AMateria&  obj) {
     std::cout << "AMateria Copy Constructor called" << std::endl;
     *this = obj;
 }
 
-AMateria& AMateria::operator=(AMateria& const obj) {
+AMateria& AMateria::operator=(const AMateria&  obj) {
     if (this != &obj) {
         this->type = obj.type;
     }

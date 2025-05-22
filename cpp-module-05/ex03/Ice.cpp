@@ -8,12 +8,12 @@ Ice::~Ice() {
     std::cout << "Ice Deonstructor called" << std::endl;
 }
 
-Ice::Ice(Ice& const obj) : AMateria(obj) {
+Ice::Ice(const Ice&  obj) : AMateria(obj) {
     std::cout << "Ice Copy Constructor called" << std::endl;
     *this = obj;
 }
 
-Ice& Ice::operator=(Ice& const obj) {
+Ice& Ice::operator=(const Ice&  obj) {
     if (this != &obj) {
         this->type = obj.type;
     }
@@ -25,5 +25,5 @@ void Ice::use(ICharacter& target) {
 }
 
 AMateria* Ice::clone() const {
-    return new Ice(); 
+    return new Ice(*this); 
 }

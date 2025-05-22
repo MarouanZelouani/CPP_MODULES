@@ -2,6 +2,7 @@
 #define _CHARACTER_HPP__
 
 #include "ICharacter.hpp"
+#include "AMateria.hpp"
 
 // memory leak, save address 
 class Character : public ICharacter
@@ -13,8 +14,8 @@ public:
     Character();
     Character(std::string name);
     ~Character();
-    Character(Character& const obj);
-    Character& operator=(Character& const obj);
+    Character(const Character& obj);
+    Character& operator=(const Character& obj);
     std::string const & getName() const;
     void equip(AMateria* m);
     void unequip(int idx);

@@ -3,13 +3,13 @@
 Character::Character() : name("default") {
     std::cout << "Character Default Constructor called" << std::endl;    
     for (int i = 0; i < 4; ++i)
-        _materials[i] = 0;
+        _materials[i] = NULL;
 }
 
 Character::Character(std::string name) : name(name) {
     std::cout << "Character Default Constructor called" << std::endl;
     for (int i = 0; i < 4; ++i)
-        _materials[i] = 0;
+        _materials[i] = NULL;
 }
 
 Character::~Character() {
@@ -20,12 +20,12 @@ Character::~Character() {
     }
 }
 
-Character::Character(Character& const obj) {
+Character::Character(const Character& obj) {
     std::cout << "Character Copy Constructor called" << std::endl;
     *this = obj;
 }
 
-Character& Character::operator=(Character& const obj) {
+Character& Character::operator=(const Character& obj) {
     if (this != &obj) {
         this->name = obj.name;
         for (int i = 0; i < 4; ++i) {
@@ -46,7 +46,7 @@ std::string const & Character::getName() const {
 
 void Character::equip(AMateria* m) {
     
-    for (int i = 0; i > 4; i++) {
+    for (int i = 0; i < 4; i++) {
         if (!_materials[i]) {
             std::cout << "Materia has been added to the inventory!" << std::endl;
             _materials[i] = m;
@@ -68,7 +68,7 @@ void Character::unequip(int idx) {
 
 void Character::use(int idx, ICharacter& target) {
 
-    if (idx >= 0 && idx <= 4 && !_materials[idx]) {
+    if (idx >= 0 && idx <= 3 && _materials[idx]) {
         _materials[idx]->use(target);
         return ;
     }

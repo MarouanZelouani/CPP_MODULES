@@ -8,8 +8,8 @@ class Cure : public AMateria
 public:
     Cure();
     ~Cure();
-    Cure(Cure& const obj);
-    Cure& operator=(Cure& const obj);
+    Cure(const Cure& obj);
+    Cure& operator=(const Cure& obj);
     AMateria* clone() const;
     void use(ICharacter& target);
 };
