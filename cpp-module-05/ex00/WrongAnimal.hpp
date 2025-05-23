@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 
+// makeSound() is not virtual, demonstrates wrong polymorphism
 class WrongAnimal 
 {
 protected:

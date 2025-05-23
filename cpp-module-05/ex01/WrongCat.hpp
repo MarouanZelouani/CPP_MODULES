@@ -11,7 +11,6 @@ public:
     WrongCat(const WrongCat& obj);
     WrongCat& operator=(const WrongCat& obj);
     void makeSound() const;
-    std::string getType() const;
 };
 
 #endif

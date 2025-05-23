@@ -14,7 +14,8 @@ public:
     Cat(const Cat& obj);
     Cat& operator=(const Cat& obj);
     void makeSound() const;
-    std::string getType() const;
+    void setIdea(std::string idea);
+    void getIdeas() const;
 };
 
 #endif

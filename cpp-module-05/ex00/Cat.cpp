@@ -20,10 +20,6 @@ Cat& Cat::operator=(const Cat& obj) {
     return *this;
 }
 
-std::string Cat::getType() const {
-    return this->type;
-}
-
 void Cat::makeSound() const {
     std::cout << "meaw meaw" << std::endl;
 }

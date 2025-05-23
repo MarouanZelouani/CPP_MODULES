@@ -23,3 +23,7 @@ Animal& Animal::operator=(const Animal& obj) {
     }
     return *this;
 }
+
+std::string Animal::getType() const {
+    return this->type;
+}

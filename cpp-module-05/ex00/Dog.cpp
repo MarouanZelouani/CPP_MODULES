@@ -20,10 +20,6 @@ Dog& Dog::operator=(const Dog& obj) {
     return *this;
 }
 
-std::string Dog::getType() const {
-    return this->type;
-}
-
 void Dog::makeSound() const {
     std::cout << "haw haw" << std::endl;
 }

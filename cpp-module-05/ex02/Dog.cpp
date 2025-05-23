@@ -18,14 +18,27 @@ Dog::Dog(const Dog& obj) {
 Dog& Dog::operator=(const Dog& obj) {
     if (this != &obj) {
         this->type = obj.type;
+        this->brain = new Brain(*obj.brain);
     }
     return *this;
-}
-
-std::string Dog::getType() const {
-    return this->type;
 }
 
 void Dog::makeSound() const {
     std::cout << "haw haw" << std::endl;
 }
+
+void Dog::setIdea(std::string idea) {
+    brain->setIdea(idea);
+}
+
+void Dog::getIdeas() const {
+    
+    std::string idea;
+    for(int i = 0; i < 100; i++) {
+        idea = brain->getIdea(i);
+        if (idea.empty())
+            return ;
+        std::cout << "Idea " << i << " - " << idea << std::endl;
+    }
+}
+

@@ -1,12 +1,12 @@
 #include "Character.hpp"
 
-Character::Character() : name("default") {
-    std::cout << "Character Default Constructor called" << std::endl;    
+Character::Character() : name("default") , _collector_size(0) {
+    std::cout << "Character Default Constructor called" << std::endl;  
     for (int i = 0; i < 4; ++i)
         _materials[i] = NULL;
 }
 
-Character::Character(std::string name) : name(name) {
+Character::Character(std::string name) : name(name) , _collector_size(0) {
     std::cout << "Character Default Constructor called" << std::endl;
     for (int i = 0; i < 4; ++i)
         _materials[i] = NULL;
@@ -14,10 +14,10 @@ Character::Character(std::string name) : name(name) {
 
 Character::~Character() {
     std::cout << "Character Deconstructor called" << std::endl;
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 4; ++i)
         delete _materials[i];
-        _materials[i] = 0;
-    }
+    for (int i = 0; i < _collector_size; ++i)
+        delete _collector[i];
 }
 
 Character::Character(const Character& obj) {
@@ -58,7 +58,12 @@ void Character::equip(AMateria* m) {
 
 void Character::unequip(int idx) {
 
-    if (idx >= 0 && idx <= 4 && !_materials[idx]) {
+    if (idx >= 0 && idx < 4 && _materials[idx]) {
+        if (_collector_size == MATERIA_SIZE) {
+            std::cout << "You can't unequip this materia!" << std::endl;
+            return ;
+        }
+        _collector[_collector_size++] = _materials[idx]; 
         _materials[idx] = NULL;
         std::cout << "Materia has been removed for the inventory!" << std::endl; 
         return ;
