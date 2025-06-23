@@ -3,31 +3,27 @@
 
 #include <iostream>
 #include <string>
-#include "Bureaucrat.hpp"
+
+class Bureaucrat;
 
 class AForm 
 { 
 private:
     const std::string _name;
-    bool is_signed = false;
     const int sign_grade;
     const int exec_grade;
+    bool is_signed;
 
 public:
     class GradeTooLowException : public std::exception {
         public:
-            const char* what() const throw() {
-                return "Grade too low!";
-            }
+            const char* what() const throw();
     };
-    class GradeTooHighException : public std::exception 
-    {
+    class GradeTooHighException : public std::exception {
         public:
-            const char* what() const throw() {
-                return "Grade too high!";
-            }
+            const char* what() const throw();
     };
-    AForm(int sign_grade, int exec_grade, std::string name);
+    AForm(std::string name, int sign_grade, int exec_grade);
     virtual ~AForm();
     AForm(const AForm& obj);
     AForm& operator=(const AForm& obj);

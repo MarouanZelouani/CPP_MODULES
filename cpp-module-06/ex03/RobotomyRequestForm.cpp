@@ -1,36 +1,38 @@
 #include "RobotomyRequestForm.hpp"
+#include "Bureaucrat.hpp"
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
 
-RobotomyRequestForm::RobotomyRequestForm(Bureaucrat& target) : AForm(72, 45, "name"), _target(target){
+RobotomyRequestForm::RobotomyRequestForm(Bureaucrat* target) : AForm("name", 72, 45) {
     std::cout << "RobotomyRequestForm Default Constructor called" << std::endl;
+    this->_target = target;
 }
 
 RobotomyRequestForm::~RobotomyRequestForm() {
     std::cout << "RobotomyRequestForm Deconstructor called" << std::endl;
 }
 
-RobotomyRequestForm::RobotomyRequestForm(const RobotomyRequestForm& obj) : RobotomyRequestForm(obj._target) {
+RobotomyRequestForm::RobotomyRequestForm(const RobotomyRequestForm& obj) : AForm(obj) {
     std::cout << "RobotomyRequestForm Copy Constructor called" << std::endl;    
     *this = obj;
 }
 
 RobotomyRequestForm& RobotomyRequestForm::operator=(const RobotomyRequestForm& obj) {
     if (this != &obj) {
-        // do something 
+        this->_target = obj._target;
     }
     return *this;
 }
 
 void RobotomyRequestForm::execute(Bureaucrat const & executor) const {
-    executor.executeForm(*this);
+    if (!this->getIsSigned() || executor.getGrade() > this->getExecGrade())
+        throw GradeTooLowException();
     std::cout << "+ Makes some drilling noises +" << std::endl;
     std::srand(std::time(0));
     int random = std::rand() % 2;
-    if (random == 0) {
+    if (random == 0)
         std::cout << "+ robotomy failed +" << std::endl;
-    } else {
-        std::cout << "+" << _target.getName() << "has been robotomized +" << std::endl;
-    }
+    else
+        std::cout << "+" << _target << "has been robotomized +" << std::endl;
 }

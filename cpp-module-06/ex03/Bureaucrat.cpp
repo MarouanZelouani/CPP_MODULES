@@ -3,11 +3,10 @@
 Bureaucrat::Bureaucrat(int grade, std::string name) : _name(name) {
     std::cout << "Default Constructor called" << std::endl;
     if (grade < 1)
-        throw GradeTooLowException();
+        throw GradeTooHighException();
     else if (grade > 150)
         throw GradeTooLowException();
-    else 
-        _grade = grade;
+    _grade = grade;
 }
 
 Bureaucrat::~Bureaucrat() {
@@ -35,15 +34,15 @@ int Bureaucrat::getGrade() const {
 }
 
 void Bureaucrat::incrementGrade() {
+    if (_grade == 1)
+        throw GradeTooHighException();
     _grade--;
-    if (_grade < 1)
-        throw GradeTooLowException();
 }
 
 void Bureaucrat::decrementGrade() {
+    if (_grade == 150)
+        throw GradeTooLowException();
     _grade++;
-    if (_grade > 150)
-        throw GradeTooHighException();
 }
 
 std::ostream& operator<<(std::ostream& os, const Bureaucrat& b) {
@@ -51,23 +50,38 @@ std::ostream& operator<<(std::ostream& os, const Bureaucrat& b) {
     return os;
 }
 
-void Bureaucrat::signForm(AForm& f) {
+const char* Bureaucrat::GradeTooHighException::what() const throw() {
+    return "grade too high!";
+}
+
+const char* Bureaucrat::GradeTooLowException::what() const throw() {
+    return "grade too Low!";
+}
+
+void Bureaucrat::signForm(AForm& f) const {
     try 
     {
         f.beSigned(*this);
+        std::cout << "Bureaucrat " << _name << "successfuly signed ";
+        std::cout << "The Form " << f.getName() <<  std::endl;
     }
-    catch (...)
+    catch (const std::exception &e)
     {
-        std::cout << "couldn't sign" << std::endl;
+        std::cout << *this << " couldn't sign form!" << std::endl;
+        std::cout << e.what() << std::endl;
     }
-    std::cout << "signed" << std::endl;
 }
 
-void Bureaucrat::executeForm(AForm const & form) const {
-    if (form.getExecGrade() <= this->_grade) {
-        std::cout << "executed" << std::endl;
-        return ;
+void Bureaucrat::executeForm(AForm const & form) {
+    try 
+    {
+        form.execute(*this);
+        std::cout << "Bureaucrat " << this->_name << "executed ";
+        std::cout << "The Form " << form.getName() <<  std::endl;
     }
-    std::cout << "couldn't execute" << std::endl;
-    throw GradeTooLowException();
+    catch (const std::exception &e)
+    {
+        std::cout << *this << " couldn't execute form!" << std::endl;
+        std::cout << e.what() << std::endl;
+    }
 }

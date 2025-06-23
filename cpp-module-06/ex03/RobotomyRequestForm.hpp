@@ -6,9 +6,9 @@
 class RobotomyRequestForm : public AForm
 {
 private:
-    Bureaucrat& _target;    
+    Bureaucrat* _target;    
 public:
-    RobotomyRequestForm(Bureaucrat& target);
+    RobotomyRequestForm(Bureaucrat* target);
     ~RobotomyRequestForm();
     RobotomyRequestForm(const RobotomyRequestForm& obj);
     RobotomyRequestForm& operator=(const RobotomyRequestForm& obj);

@@ -1,36 +1,35 @@
 #include "ShrubberyCreationForm.hpp"
+#include "Bureaucrat.hpp"
 #include <fstream>
 
-ShrubberyCreationForm::ShrubberyCreationForm(Bureaucrat& target) : AForm(145, 137, "name"), _target(target){
+ShrubberyCreationForm::ShrubberyCreationForm(Bureaucrat* target) : AForm("name", 145, 137) {
     std::cout << "ShrubberyCreationForm Default Constructor called" << std::endl;
+    this->_target = target;
 }
 
 ShrubberyCreationForm::~ShrubberyCreationForm() {
     std::cout << "ShrubberyCreationForm Deconstructor called" << std::endl;
 }
 
-ShrubberyCreationForm::ShrubberyCreationForm(const ShrubberyCreationForm& obj) : ShrubberyCreationForm(obj._target) {
+ShrubberyCreationForm::ShrubberyCreationForm(const ShrubberyCreationForm& obj) : AForm(obj) {
     std::cout << "ShrubberyCreationForm Copy Constructor called" << std::endl;    
     *this = obj;
 }
 
 ShrubberyCreationForm& ShrubberyCreationForm::operator=(const ShrubberyCreationForm& obj) {
     if (this != &obj) {
-        // do something 
+        this->_target = obj._target;
     }
     return *this;
 }
 
 void ShrubberyCreationForm::execute(Bureaucrat const & executor) const {
-    std::string newFileName = this->_target.getName() + "_shrubbery";
+    if (!this->getIsSigned() || executor.getGrade() > this->getExecGrade())
+        throw GradeTooLowException();
+
+    std::string newFileName = this->_target->getName() + "_shrubbery";
     std::ofstream file(newFileName.c_str());
     
-    executor.executeForm(*this);
-    if (!this->getIsSigned())
-    {
-        std::cerr << "Error : can't execute the Form" << std::endl;
-        return ;
-    }    
     if (file.is_open())
     {
         file << "     ccee88oo\n";
