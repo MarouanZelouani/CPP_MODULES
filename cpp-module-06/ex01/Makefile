@@ -1,7 +1,7 @@
 NAME = Bureaucrat
 CPP = c++ 
 CPPFLAGS = -Wextra -Werror -Wall -std=c++98 
-SRC = main.cpp Bureaucrat.cpp
+SRC = main.cpp Bureaucrat.cpp From.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all : $(NAME)

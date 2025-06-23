@@ -1,7 +1,8 @@
 #include "Form.hpp"
+#include "Bureaucrat.hpp"
 
-Form::Form(int sign_grade, int exec_grade, std::string name) 
-    : _name(name), sign_grade(sign_grade), exec_grade(exec_grade) {
+Form::Form(std::string name, int sign_grade, int exec_grade) 
+    : _name(name), sign_grade(sign_grade), exec_grade(exec_grade), is_signed(false) {
     std::cout << "Default Constructor called" << std::endl;
     if (sign_grade < 1 || exec_grade < 1)
         throw GradeTooLowException();
@@ -13,16 +14,25 @@ Form::~Form() {
     std::cout << "Deconstructor called" << std::endl;
 }
 
-Form::Form(const Form& obj) : Form(obj.sign_grade, obj.exec_grade, obj._name) {
+Form::Form(const Form& obj) : _name(obj._name), sign_grade(obj.sign_grade), exec_grade(obj.exec_grade) {
     std::cout << "Copy Constructor called" << std::endl;
-    // *this = obj;
+    *this = obj;
 }
 
 Form& Form::operator=(const Form& obj) {
     if (this != &obj) {
-        // do noting 
+        this->is_signed = obj.is_signed; 
     }
     return *this;
+}
+
+const char* Form::GradeTooHighException::what() const throw() {
+    return "grade too high!";
+}
+
+
+const char* Form::GradeTooLowException::what() const throw() {
+    return "grade too Low!";
 }
 
 std::string Form::getName() const {
@@ -42,13 +52,16 @@ bool Form::getIsSigned() const {
 }
 
 void Form::beSigned(const Bureaucrat& b) {
-    if (b.getGrade() >= sign_grade && !is_signed)
-        is_signed == true;
-    else
-        throw GradeTooLowException(); 
+    if (b.getGrade() > sign_grade)
+        throw GradeTooLowException();
+    if (!is_signed)
+        is_signed = true;
 }
 
 std::ostream& operator<<(std::ostream& os, const Form& f) {
-    // os << b.getName() << ", Bureaucrat grade " << b.getGrade() << ".";
+    os << "Form Name : " << f.getName() << std::endl;
+    os << "Grade To sign : " << f.getSignGrade() << std::endl;
+    os << "Grade to execute : " << f.getExecGrade() << std::endl;
+    os << "signed : " << (f.getIsSigned() ? "true" : "false") << std::endl; 
     return os;
 }

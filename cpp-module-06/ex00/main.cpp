@@ -3,7 +3,7 @@
 int main (void)
 {
     try {
-        Bureaucrat me(-1, "marouan");
+        Bureaucrat me(1, "marouan");
     }
     catch(const std::exception& e)
     {
