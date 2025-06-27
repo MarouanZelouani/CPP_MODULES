@@ -1,9 +1,38 @@
 #include "Bureaucrat.hpp"
 #include "AForm.hpp"
+#include "Intern.hpp"
 
 int main(void)
 {
-    
+    Intern someIntern;
+    Bureaucrat boss(1, "Boss");
+    Bureaucrat worker(140, "Worker");
+
+    std::string formNames[] = {
+        "presidential pardon",
+        "robotomy request",
+        "shrubbery creation",
+        "unknown form"
+    };
+
+    for (int i = 0; i < 4; ++i) {
+        std::string target = "Target_" + formNames[i];
+        AForm* form = someIntern.makeForm(formNames[i], target);
+        if (form) {
+            boss.signForm(*form);
+            boss.executeForm(*form);
+            delete form;
+        }
+    }
+
+    // Test with a worker who can't sign or execute
+    std::string target = "Garden";
+    AForm* shrub = someIntern.makeForm(formNames[2], target);
+    if (shrub) {
+        worker.signForm(*shrub);
+        worker.executeForm(*shrub);
+        delete shrub;
+    }
 
     return 0;
 }
