@@ -6,9 +6,9 @@
 class ShrubberyCreationForm : public AForm
 {
 private:
-    Bureaucrat* _target;    
+    std::string _target;    
 public:
-    ShrubberyCreationForm(Bureaucrat* target);
+    ShrubberyCreationForm(std::string target);
     ~ShrubberyCreationForm();
     ShrubberyCreationForm(const ShrubberyCreationForm& obj);
     ShrubberyCreationForm& operator=(const ShrubberyCreationForm& obj);

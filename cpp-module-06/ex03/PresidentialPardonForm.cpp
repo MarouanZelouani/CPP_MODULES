@@ -1,7 +1,7 @@
 #include "PresidentialPardonForm.hpp"
 #include "Bureaucrat.hpp"
 
-PresidentialPardonForm::PresidentialPardonForm(Bureaucrat* target) : AForm::AForm("name", 25, 5) {
+PresidentialPardonForm::PresidentialPardonForm(std::string target) : AForm::AForm("name", 25, 5) {
     std::cout << "PresidentialPardonForm Default Constructor called" << std::endl;
     this->_target = target;
 }

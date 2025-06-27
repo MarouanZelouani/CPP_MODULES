@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <ctime>
 
-RobotomyRequestForm::RobotomyRequestForm(Bureaucrat* target) : AForm("name", 72, 45) {
+RobotomyRequestForm::RobotomyRequestForm(std::string target) : AForm("name", 72, 45) {
     std::cout << "RobotomyRequestForm Default Constructor called" << std::endl;
     this->_target = target;
 }

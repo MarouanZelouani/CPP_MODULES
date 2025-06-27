@@ -2,7 +2,7 @@
 #include "Bureaucrat.hpp"
 #include <fstream>
 
-ShrubberyCreationForm::ShrubberyCreationForm(Bureaucrat* target) : AForm("name", 145, 137) {
+ShrubberyCreationForm::ShrubberyCreationForm(std::string target) : AForm("name", 145, 137) {
     std::cout << "ShrubberyCreationForm Default Constructor called" << std::endl;
     this->_target = target;
 }
@@ -27,7 +27,7 @@ void ShrubberyCreationForm::execute(Bureaucrat const & executor) const {
     if (!this->getIsSigned() || executor.getGrade() > this->getExecGrade())
         throw GradeTooLowException();
 
-    std::string newFileName = this->_target->getName() + "_shrubbery";
+    std::string newFileName = this->_target + "_shrubbery";
     std::ofstream file(newFileName.c_str());
     
     if (file.is_open())

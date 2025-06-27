@@ -6,9 +6,9 @@
 class PresidentialPardonForm : public AForm
 {
 private:
-    Bureaucrat* _target;    
+    std::string _target;    
 public:
-    PresidentialPardonForm(Bureaucrat* target);
+    PresidentialPardonForm(std::string target);
     ~PresidentialPardonForm();
     PresidentialPardonForm(const PresidentialPardonForm& obj);
     PresidentialPardonForm& operator=(const PresidentialPardonForm& obj);
