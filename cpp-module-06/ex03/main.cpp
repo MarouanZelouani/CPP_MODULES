@@ -14,7 +14,9 @@ int main(void)
         "shrubbery creation",
         "unknown form"
     };
-
+    std::cout << "-------------------------------------\n";
+    std::cout << "-------------------------------------\n";
+    
     for (int i = 0; i < 4; ++i) {
         std::string target = "Target_" + formNames[i];
         AForm* form = someIntern.makeForm(formNames[i], target);
@@ -23,8 +25,10 @@ int main(void)
             boss.executeForm(*form);
             delete form;
         }
+        std::cout << "-------------------------------------\n";
     }
-
+    std::cout << "-------------------------------------\n";
+    
     // Test with a worker who can't sign or execute
     std::string target = "Garden";
     AForm* shrub = someIntern.makeForm(formNames[2], target);

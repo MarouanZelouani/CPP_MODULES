@@ -24,9 +24,8 @@ ShrubberyCreationForm& ShrubberyCreationForm::operator=(const ShrubberyCreationF
 }
 
 void ShrubberyCreationForm::execute(Bureaucrat const & executor) const {
-    if (!this->getIsSigned() || executor.getGrade() > this->getExecGrade())
+    if (!this->getIsSigned()|| executor.getGrade() > this->getExecGrade())
         throw GradeTooLowException();
-
     std::string newFileName = this->_target + "_shrubbery";
     std::ofstream file(newFileName.c_str());
     
