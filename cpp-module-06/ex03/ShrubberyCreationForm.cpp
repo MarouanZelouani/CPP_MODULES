@@ -18,13 +18,16 @@ ShrubberyCreationForm::ShrubberyCreationForm(const ShrubberyCreationForm& obj) :
 
 ShrubberyCreationForm& ShrubberyCreationForm::operator=(const ShrubberyCreationForm& obj) {
     if (this != &obj) {
+        AForm::operator=(obj);
         this->_target = obj._target;
     }
     return *this;
 }
 
 void ShrubberyCreationForm::execute(Bureaucrat const & executor) const {
-    if (!this->getIsSigned() || executor.getGrade() > this->getExecGrade())
+    if (!this->getIsSigned())
+        throw ExecutingUnsignedFormException();
+    if (executor.getGrade() > this->getExecGrade())
         throw GradeTooLowException();
 
     std::string newFileName = this->_target + "_shrubbery";

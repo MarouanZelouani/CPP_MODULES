@@ -30,6 +30,9 @@ const char* AForm::GradeTooHighException::what() const throw() {
     return "grade too high!";
 }
 
+const char* AForm::ExecutingUnsignedFormException::what() const throw() {
+    return "Trying to execute unsigned form!";
+}
 
 const char* AForm::GradeTooLowException::what() const throw() {
     return "grade too Low!";
@@ -59,9 +62,11 @@ void AForm::beSigned(const Bureaucrat& b) {
 }
 
 std::ostream& operator<<(std::ostream& os, const AForm& f) {
-    os << "Form Name : " << f.getName() << std::endl;
-    os << "Grade To sign : " << f.getSignGrade() << std::endl;
-    os << "Grade to execute : " << f.getExecGrade() << std::endl;
-    os << "signed : " << (f.getIsSigned() ? "true" : "false") << std::endl; 
+    os << "-------Form INFO-------\n";
+    os << " Form Name : " << f.getName() << std::endl;
+    os << " Grade To sign : " << f.getSignGrade() << std::endl;
+    os << " Grade to execute : " << f.getExecGrade() << std::endl;
+    os << " signed : " << (f.getIsSigned() ? "true" : "false") << std::endl;
+    os << "-----------------------"; 
     return os;
 }

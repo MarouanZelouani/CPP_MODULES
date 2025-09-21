@@ -16,12 +16,13 @@ private:
 
 public:
     class GradeTooLowException : public std::exception {
-        public:
-            const char* what() const throw();
+        public: const char* what() const throw();
     };
     class GradeTooHighException : public std::exception {
-        public:
-            const char* what() const throw();
+        public: const char* what() const throw();
+    };
+    class ExecutingUnsignedFormException : public std::exception {
+        public: const char* what() const throw();
     };
     AForm(std::string name, int sign_grade, int exec_grade);
     virtual ~AForm();

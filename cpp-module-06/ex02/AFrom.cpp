@@ -30,6 +30,9 @@ const char* AForm::GradeTooHighException::what() const throw() {
     return "Grade too High!";
 }
 
+const char* AForm::ExecutingUnsignedFormException::what() const throw() {
+    return "Trying to execute unsigned form!";
+}
 
 const char* AForm::GradeTooLowException::what() const throw() {
     return "Grade too Low!";

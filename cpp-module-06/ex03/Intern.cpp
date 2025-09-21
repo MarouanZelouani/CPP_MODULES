@@ -26,8 +26,7 @@ AForm* makeShrubberyForm(std::string target) {
     return new ShrubberyCreationForm(target);
 }
 
-AForm* Intern::makeForm(std::string& formName, std::string& formTarget) {
-    
+AForm* Intern::makeForm(std::string& formName, std::string& formTarget) {   
     std::string formTypes[3] = {"presidential pardon", "robotomy request", "shrubbery creation"};
     typedef AForm* (*FormCreator)(std::string);
     FormCreator creators[3] = {makePresidentialFrom, makeRobotomyFrom, makeShrubberyForm};
@@ -39,6 +38,6 @@ AForm* Intern::makeForm(std::string& formName, std::string& formTarget) {
         }
     }
 
-    std::cout << "form " << formName << " doesn't exist" << std::endl;
+    std::cout << "form " << formName << " does't exist" << std::endl;
     return NULL;
 }

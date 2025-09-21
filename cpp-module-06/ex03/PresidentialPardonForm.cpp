@@ -17,14 +17,16 @@ PresidentialPardonForm::PresidentialPardonForm(const PresidentialPardonForm& obj
 
 PresidentialPardonForm& PresidentialPardonForm::operator=(const PresidentialPardonForm& obj) {
     if (this != &obj) {
+        AForm::operator=(obj);
         this->_target = obj._target;
     }
     return *this;
 }
 
 void PresidentialPardonForm::execute(Bureaucrat const & executor) const {
-
-    if (executor.getGrade() > this->getExecGrade() || !this->getIsSigned())
+    if (!this->getIsSigned())
+        throw ExecutingUnsignedFormException();
+    if (executor.getGrade() > this->getExecGrade())
         throw GradeTooLowException();
     std::cout << this->_target << " has been pardoned by Zaphod Beeblebrox." << std::endl;
 }

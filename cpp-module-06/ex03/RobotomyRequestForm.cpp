@@ -20,13 +20,16 @@ RobotomyRequestForm::RobotomyRequestForm(const RobotomyRequestForm& obj) : AForm
 
 RobotomyRequestForm& RobotomyRequestForm::operator=(const RobotomyRequestForm& obj) {
     if (this != &obj) {
+        AForm::operator=(obj);
         this->_target = obj._target;
     }
     return *this;
 }
 
 void RobotomyRequestForm::execute(Bureaucrat const & executor) const {
-    if (!this->getIsSigned() || executor.getGrade() > this->getExecGrade())
+    if (!this->getIsSigned())
+        throw ExecutingUnsignedFormException();
+    if (executor.getGrade() > this->getExecGrade())
         throw GradeTooLowException();
     std::cout << "+ Makes some drilling noises +" << std::endl;
     std::srand(std::time(0));
