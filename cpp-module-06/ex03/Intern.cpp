@@ -33,7 +33,7 @@ AForm* Intern::makeForm(std::string& formName, std::string& formTarget) {
     
     for (int i = 0; i <= 3; i++) {
         if (formName == formTypes[i]) {
-            std::cout << "Intern clreates " << formName << std::endl;
+            std::cout << "Intern creates " << formName << std::endl;
             return creators[i](formTarget);
         }
     }

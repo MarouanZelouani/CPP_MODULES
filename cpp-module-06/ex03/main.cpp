@@ -40,9 +40,8 @@ int main(void)
             delete shrub;
         }
     }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
     }
     return 0;
 }
