@@ -1,7 +1,7 @@
-NAME = ex00
+NAME = Converter
 CPP = c++ 
-CPPFLAGS = -Wextra -Werror -Wall #-std=c++98 
-SRC = main.cpp *.cpp
+CPPFLAGS = -Wextra -Werror -Wall -std=c++98 
+SRC = main.cpp getType.cpp ScalarConverter.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all : $(NAME)

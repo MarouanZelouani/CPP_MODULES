@@ -1,6 +1,6 @@
 NAME = ex01
 CPP = c++ 
-CPPFLAGS = -Wextra -Werror -Wall #-std=c++98 
+CPPFLAGS = -Wextra -Werror -Wall -std=c++98 
 SRC = main.cpp Serializer.cpp
 OBJ = $(SRC:.cpp=.o)
 

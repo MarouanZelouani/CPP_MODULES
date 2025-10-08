@@ -7,6 +7,9 @@
 #include <cctype>
 #include <sstream>
 #include <iomanip>
+#include <climits>
+#include <cfloat>
+#include <limits>
 
 enum TYPES {
     CHAR,
@@ -21,6 +24,8 @@ class ScalarConverter {
     private:
         ScalarConverter();
         ~ScalarConverter();
+        ScalarConverter(const ScalarConverter& obj);
+        ScalarConverter& operator=(const ScalarConverter& obj);
     public:
         static void convert(const std::string& str);
 };

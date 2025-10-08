@@ -1,9 +1,14 @@
-#include "A.hpp"
-#include "B.hpp"
-#include "C.hpp"
+#include "Classes.hpp"
+#include <ctime>
+#include <stdlib.h> 
 
-Base * generate(void) {
-    int choice = std::rand() % 3;
+Base* generate(void) {
+    static bool seeded = false;
+    if (!seeded) {
+        srand(time(0));
+        seeded = true;
+    }
+    int choice = (rand() % 3);
     Base* obj = 0;
     if (choice == 0)
         obj = new A();
@@ -21,19 +26,21 @@ void identify(Base* p) {
         std::cout << "B!" << std::endl;
     else if (dynamic_cast<C*>(p))
         std::cout << "C!" << std::endl;
-    else 
-        std::cout << "Unknown Type!" << std::endl;
 }
 
 void identify(Base& p) {
-    if (dynamic_cast<A*>(&p))
+    try {
+        (void)dynamic_cast<A&>(p);
         std::cout << "A!" << std::endl;
-    else if (dynamic_cast<B*>(&p))
+    } catch(const std::exception& e){ }
+    try {
+        (void)dynamic_cast<B&>(p);
         std::cout << "B!" << std::endl;
-    else if (dynamic_cast<C*>(&p))
+    } catch(const std::exception& e){}
+    try {
+        (void)dynamic_cast<C&>(p);
         std::cout << "C!" << std::endl;
-    else 
-        std::cout << "Unknown Type!" << std::endl;
+    } catch(const std::exception& e){}
 }
 
 

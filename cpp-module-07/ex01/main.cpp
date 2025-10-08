@@ -5,12 +5,12 @@ int main (void) {
     Data data;
     data.x = 1;
     data.y = 2;
+    
+    uintptr_t raw = Serializer::serialize(&data);
+    Data* newData = Serializer::deserialize(raw);
 
-    Serializer sr;
 
-    uintptr_t raw = sr.serialize(&data);
-    Data* newData = sr.deserialize(raw);
-
+    std::cout << "raw: " << raw << std::endl;
     std::cout << "Original address: " << &data << std::endl;
     std::cout << "Deserialized address: " << newData << std::endl;
 

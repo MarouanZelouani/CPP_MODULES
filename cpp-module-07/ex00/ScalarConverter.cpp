@@ -1,11 +1,19 @@
 #include "ScalarConverter.hpp"
 
+ScalarConverter::ScalarConverter(){}
+ScalarConverter::~ScalarConverter(){}
+ScalarConverter::ScalarConverter(const ScalarConverter& obj) { *this = obj; }
+ScalarConverter& ScalarConverter::operator=(const ScalarConverter& obj) {
+    (void)obj;
+    return *this;
+}
+
 void CharConverter(const std::string& str) {
     std::cout << "char: ";
     if (!std::isprint(static_cast<unsigned char>(str[0])))
         std::cout << "Non displayable" << std::endl;
     else 
-        std::cout << str[0] << std::endl;
+        std::cout << "'" << str[0] << "'" << std::endl;
     std::cout << "int: " << static_cast<int>(str[0]) << std::endl;
     std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(str[0]) << "f" << std::endl;
     std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(str[0]) << std::endl;
@@ -22,7 +30,7 @@ void IntConverter(const std::string& str) {
     else if (!std::isprint(static_cast<unsigned char>(int_n)))
         std::cout << "Non displayable" << std::endl;
     else 
-        std::cout << static_cast<char>(int_n) << std::endl;
+        std::cout << "'" << static_cast<char>(int_n) << "'" << std::endl;
     std::cout << "int: " << int_n << std::endl;
     std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(int_n) << "f" << std::endl;
     std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(int_n)<< std::endl;
@@ -40,8 +48,11 @@ void FloatConverter(const std::string& str) {
     else if (!std::isprint(static_cast<unsigned char>(float_n)))
         std::cout << "Non displayable" << std::endl;
     else
-        std::cout << static_cast<char>(float_n) << std::endl;
-    std::cout << "int: " << static_cast<int>(float_n) << std::endl;
+        std::cout << "'" << static_cast<char>(float_n) << "'" << std::endl;
+    if (float_n <= 2147483647.0 && float_n >= -2147483648.0)
+        std::cout << "int: " << static_cast<int>(float_n) << std::endl;
+    else 
+        std::cout << "int: impossible" << std::endl;
     std::cout << "float: " << std::fixed << std::setprecision(1) << float_n << "f" << std::endl;
     std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(float_n)<< std::endl;
 }
@@ -57,15 +68,34 @@ void DoubleConverter(const std::string& str) {
     else if (!std::isprint(static_cast<unsigned char>(double_n)))
         std::cout << "Non displayable" << std::endl;
     else
-        std::cout << static_cast<char>(double_n) << std::endl;
-    std::cout << "int: " << static_cast<int>(double_n) << std::endl;
-    std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(double_n) << "f" << std::endl;
+        std::cout << "'" << static_cast<char>(double_n) << "'" << std::endl;
+    if (double_n <= 2147483647.0 && double_n >= -2147483648.0)
+        std::cout << "int: " << static_cast<int>(double_n) << std::endl;
+    else 
+        std::cout << "int: impossible" << std::endl;
+    if (double_n <= std::numeric_limits<float>::max() && double_n >= -std::numeric_limits<float>::max())
+        std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(double_n) << "f" << std::endl;
+    else 
+        std::cout << "float: impossible" << std::endl;
     std::cout << "double: " << std::fixed << std::setprecision(1) << double_n << std::endl;
 }
 
+void InfConverter(const std::string& str) {
+    std::cout << "char: impossible" << std::endl;
+    std::cout << "int: impossible" << std::endl;
+    if (str[0] == '+') {
+        std::cout << "float: +inff" << std::endl;
+        std::cout << "double: +inf" << std::endl;
+    } else if (str[0] == '-') {
+        std::cout << "float: -inff" << std::endl;
+        std::cout << "double: -inf" << std::endl;
+    } else {
+        std::cout << "float: nanf" << std::endl;
+        std::cout << "double: nan" << std::endl;
+    }
+}
+
 void ScalarConverter::convert(const std::string& str) {
-    if (str.empty())
-        throw std::runtime_error("Empty string!");
     int type = getType(str);
     if (type == ERROR)
         throw std::runtime_error("Error!");
@@ -82,6 +112,9 @@ void ScalarConverter::convert(const std::string& str) {
             break;
         case DOUBLE:
             DoubleConverter(str);
+            break;
+        case SPECIAL:
+            InfConverter(str);
             break;
     }  
 }

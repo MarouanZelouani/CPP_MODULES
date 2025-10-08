@@ -2,18 +2,20 @@
 #define _SERIALIZER_HPP__
 
 #include <iostream>
-#include <cstdint>
+
+typedef unsigned long uintptr_t;
 
 struct Data {
     int x, y;
 };
 
 class Serializer {
-    public:
+    private:
         Serializer();
         ~Serializer();
         Serializer(const Serializer& obj);
         Serializer& operator=(const Serializer& obj);
+    public:
         static uintptr_t serialize(Data* ptr);
         static Data* deserialize(uintptr_t raw);
 };

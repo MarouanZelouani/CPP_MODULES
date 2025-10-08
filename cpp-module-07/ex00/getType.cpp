@@ -45,7 +45,9 @@ bool isValidFloat(const std::string& str)
     }
     if (dotCouter > 1 || fCounter > 1)
         return false;
-    if (str.back() != 'f' && fCounter)
+    if (str[str.size() - 1] != 'f' && fCounter)
+        return false;
+    if (str[str.size() - 1] == 'f' && !dotCouter)
         return false;
     if (dotCouter == 1) 
     {
@@ -60,6 +62,7 @@ bool isValidFloat(const std::string& str)
 
 int getType(const std::string& str) 
 {
+    if (str.empty()) return CHAR;
     if (isSpecila(str)) return SPECIAL;
     if (str.length() == 1) 
     {
@@ -71,7 +74,7 @@ int getType(const std::string& str)
         return INT;
     if (isValidFloat(str))
     {
-        if (str.back() == 'f')
+        if (str[str.size() - 1] == 'f')
             return FLOAT;
         return DOUBLE;
     }
