@@ -30,15 +30,19 @@ Array<T>::Array(unsigned int n) : _size(n) {
 }
 
 template<typename T>
-Array<T>::Array(const Array& obj) {
-    *this = obj;
+Array<T>::Array(const Array<T>& obj) : _size(obj._size) {
+    array = new T[_size];
+    for (unsigned int i = 0; i < _size; i++) {
+        array[i] = obj.array[i];
+    }
 }
 
 template<typename T>
-Array<T>& Array<T>::operator=(const Array& obj) {
+Array<T>& Array<T>::operator=(const Array<T>& obj) {
     if (this != &obj) {
+        delete[] array;
         _size = obj._size;
-        array = new T[size];
+        array = new T[_size];
         for (unsigned int i = 0; i < _size; i++) {
             array[i] = obj.array[i];
         }         
@@ -68,7 +72,7 @@ unsigned int Array<T>::size() const {
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const Array<T>& arr) {
     if (!arr.size())
-        os << "EMPTY!" << std::endl;
+        os << "{}." << std::endl;
     else {
         os << "{";
         for (unsigned int i = 0; i < arr.size(); i++) {
