@@ -14,13 +14,19 @@ public:
     MutantStack& operator=(const MutantStack& obj);
 
     typedef typename std::stack<T>::container_type::iterator iterator;
-    // typedef typename std::stack<T>::container_type::const_iterator const_iterator;
+    typedef typename std::stack<T>::container_type::const_iterator const_iterator;
 
     iterator begin();
     iterator end();
 
-    // const_iterator begin();
-    // const_iterator end();
+    const_iterator begin() const;
+    const_iterator end() const;
+
+    reverse_iterator rbegin();
+    reverse_iterator rend();
+
+    const_reverse_iterator rbegin() const;
+    const_reverse_iterator rend() const;
 };
 
 template <typename T>
@@ -38,7 +44,7 @@ MutantStack<T>::MutantStack(const MutantStack& obj) : std::stack<T>(obj)
 template <typename T>
 MutantStack<T>& MutantStack<T>::operator=(const MutantStack& obj) {
     if (this != &obj)
-        std::stack<T>::opreator=(obj);
+        std::stack<T>::operator=(obj);
     return *this;
 }
 
@@ -49,5 +55,15 @@ typename MutantStack<T>::iterator MutantStack<T>::begin() {
 
 template<typename T>
 typename MutantStack<T>::iterator MutantStack<T>::end() {
+    return this->c.end();
+}
+
+template<typename T>
+typename MutantStack<T>::const_iterator MutantStack<T>::begin() const {
+    return this->c.begin();
+}
+
+template<typename T>
+typename MutantStack<T>::const_iterator MutantStack<T>::end() const {
     return this->c.end();
 }
