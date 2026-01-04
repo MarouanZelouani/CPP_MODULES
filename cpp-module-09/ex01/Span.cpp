@@ -20,12 +20,12 @@ Span& Span::operator=(const Span& obj) {
 
 void Span::addNumber(int value) {
     if (vect.size() == N)
-        throw std::runtime_error("Span is full!");
+        throw std::runtime_error("Sapn is full!");
     vect.push_back(value);
 }
 
 int Span::shortestSpan() const {
-    if (N < 3)
+    if (vect.empty() || N == 1)
         throw std::runtime_error("Error: can't calculate shotest span!");
     
     std::vector<int> sorted_vect = vect;

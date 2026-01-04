@@ -14,21 +14,20 @@ int main() {
         std::cout << sp.shortestSpan() << std::endl;
         std::cout << sp.longestSpan() << std::endl;
 
-    
-        Span sp1(6);
-        int arr[] = {1, 2, 3, 4, 5, 6};
-        std::vector<int> vect(arr, arr + 6);
-        
-        sp1.addRange(vect.begin(), vect.end());
-        std::cout << sp1.shortestSpan() << std::endl;
-        std::cout << sp1.longestSpan() << std::endl;
+        Span sp2(10000);
+        std::vector<int> vect2;
 
-        sp1.addNumber(12);
+        for(int i = 0; i < 10000; i++) vect2.push_back(i);
+
+        sp2.addRange(vect2.begin(), vect2.end());
+        std::cout << sp2.shortestSpan() << std::endl;
+        std::cout << sp2.longestSpan() << std::endl;
+    
+        sp2.addNumber(12);
     }
     catch(const std::exception& e) {
         std::cerr << e.what() << std::endl;
     }
-    
     
     return 0;
 }
