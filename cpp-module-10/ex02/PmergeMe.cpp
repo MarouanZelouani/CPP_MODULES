@@ -1,12 +1,26 @@
 #include "PmergeMe.hpp"
 
-PmergeMe::PmergeMe(){}
-PmergeMe::~PmergeMe(){}
-PmergeMe::PmergeMe(const PmergeMe& obj){}
-PmergeMe& PmergeMe::operator=(const PmergeMe& obj){}
+PmergeMe::PmergeMe() {}
+PmergeMe::~PmergeMe() {}
+
+PmergeMe::PmergeMe(const PmergeMe& obj) { *this = obj; }
+PmergeMe& PmergeMe::operator=(const PmergeMe& obj) {
+    if (this != &obj) {
+        _data = obj._data;
+        _sortedData = obj._sortedData;
+    }
+    return *this;
+}
 
 void PmergeMe::sort() {
     PmergeMe::fordJohnsonSort(_data);
+}
+
+const std::vector<int>& PmergeMe::getData() const {
+    return _data;
+}
+const std::vector<int>& PmergeMe::getSortedData() const {
+    return _sortedData;
 }
 
 void PmergeMe::parseData(int ac, char **av) {
@@ -35,7 +49,7 @@ void PmergeMe::parseData(int ac, char **av) {
     }
 }
 
-int PmergeMe::stringToInt(std::string str) const {
+int PmergeMe::stringToInt(std::string& str) const {
     if (!str.empty() && str[0] == '+')
         str = str.substr(1);
     
@@ -93,7 +107,7 @@ std::vector<int> PmergeMe::fordJohnsonSort(std::vector<int> inputVect) {
 
     // build pending list with pair info
     std::vector<Pair> pending;
-    for (int i = 1; i < smaller.size(); ++i) {
+    for (size_t i = 1; i < smaller.size(); ++i) {
         Pair pair;
         pair.value = smaller[i];
         pair.pair_idx = i + 1;
