@@ -1,0 +1,130 @@
+FUNCTION FordJohnsonSort(input_array):
+    
+    // ============================================
+    // STEP 1: HANDLE BASE CASES
+    // ============================================
+    IF length(input_array) == 0:
+        RETURN empty_array
+    
+    IF length(input_array) == 1:
+        RETURN input_array
+    
+    
+    // ============================================
+    // STEP 2: CREATE PAIRS AND COMPARE
+    // ============================================
+    // Purpose: Group elements and identify relationships
+    
+    larger[]            // Will hold the larger element from each pair
+    smaller[]           // Will hold the smaller element from each pair
+    straggler = NULL    // For odd-sized arrays
+    
+    // Handle odd number of elements
+    IF length(input_array) is ODD:
+        straggler = input_array[last_index]
+        Remove last element from input_array
+    
+    // Create pairs and compare
+    FOR i = 0 TO length(input_array) - 1 STEP 2:
+        a = input_array[i]
+        b = input_array[i + 1]
+        
+        IF a > b:
+            larger.append(a)
+            smaller.append(b)
+        ELSE:
+            larger.append(b)
+            smaller.append(a)
+    
+    PRINT "After pairing:"
+    PRINT "Larger elements:", larger
+    PRINT "Smaller elements:", smaller
+    PRINT "Straggler:", straggler
+    
+    
+    // ============================================
+    // STEP 3: RECURSIVELY SORT LARGER ELEMENTS
+    // ============================================
+    // Purpose: Create initial sorted main chain
+    
+    main_chain = FordJohnsonSort(larger)  // RECURSIVE CALL
+    
+    PRINT "Sorted larger elements (main chain):", main_chain
+    
+    
+    // ============================================
+    // STEP 4: INSERT FIRST SMALLER ELEMENT
+    // ============================================
+    // Purpose: First small element goes at beginning (no comparisons needed)
+    
+    first_small = smaller[0]
+    main_chain.insert_at_beginning(first_small)
+    
+    PRINT "After inserting first small element:", main_chain
+    
+    
+    // ============================================
+    // STEP 5: BUILD PENDING LIST WITH PAIR INFO
+    // ============================================
+    // Purpose: Track which elements to insert and their constraints
+    
+    pending = []  // Array of Pair structures
+    
+    // Add remaining smaller elements
+    FOR i = 1 TO length(smaller) - 1:
+        pair = NEW Pair
+        pair.value = smaller[i]
+        pair.paired_with = i + 1  // Position in main_chain (adjusted for first insert)
+        pending.append(pair)
+    
+    // Add straggler if it exists
+    IF straggler != NULL:
+        pair = NEW Pair
+        pair.value = straggler
+        pair.paired_with = length(main_chain)  // Can search entire chain
+        pending.append(pair)
+    
+    PRINT "Pending elements to insert:", pending
+    
+    
+    // ============================================
+    // STEP 6: GENERATE JACOBSTHAL INSERTION ORDER
+    // ============================================
+    // Purpose: Determine optimal insertion sequence
+    
+    insertion_order = GenerateJacobsthalInsertionOrder(length(pending))
+    
+    PRINT "Jacobsthal insertion order:", insertion_order
+    
+    
+    // ============================================
+    // STEP 7: INSERT PENDING ELEMENTS
+    // ============================================
+    // Purpose: Insert each element using binary search
+    
+    FOR each index IN insertion_order:
+        element = pending[index].value
+        max_position = pending[index].paired_with
+        
+        PRINT "Inserting:", element, "can search up to position", max_position
+        
+        // Binary search for insertion position
+        insert_pos = BinarySearch(main_chain, element, 0, max_position)
+        
+        PRINT "  Found position:", insert_pos
+        
+        // Insert the element
+        main_chain.insert_at(insert_pos, element)
+        
+        PRINT "  Main chain now:", main_chain
+        
+        // UPDATE CRITICAL: Adjust paired_with indices for remaining elements
+        FOR each remaining IN pending:
+            IF remaining.paired_with >= insert_pos:
+                remaining.paired_with = remaining.paired_with + 1
+    
+    
+    // ============================================
+    // STEP 8: RETURN SORTED ARRAY
+    // ============================================
+    RETURN main_chain
