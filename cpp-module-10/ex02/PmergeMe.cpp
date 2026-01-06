@@ -253,7 +253,7 @@ void PmergeMe::displayAfter() const {
 
 bool PmergeMe::isSorted() const {
     std::vector<int> vect = _sortedData;
-    for (size_t i = 0; i < vect.size() - 2; ++i) {
+    for (size_t i = 0; i < vect.size() - 1; ++i) {
         if (vect[i] > vect[i + 1]) return false;
     }
     return true;
