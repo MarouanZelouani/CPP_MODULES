@@ -13,7 +13,7 @@ PmergeMe& PmergeMe::operator=(const PmergeMe& obj) {
 }
 
 void PmergeMe::sort() {
-    PmergeMe::fordJohnsonSort(_data);
+    _sortedData = PmergeMe::fordJohnsonSort(_data);
 }
 
 const std::vector<int>& PmergeMe::getData() const {
@@ -24,9 +24,8 @@ const std::vector<int>& PmergeMe::getSortedData() const {
 }
 
 void PmergeMe::parseData(int ac, char **av) {
-    if (ac < 2) {
+    if (ac < 2)
         throw std::runtime_error("Error: No input provided");
-    }
     
     for (int i = 1; i < ac; ++i) {
         std::string arg(av[i]);
@@ -47,6 +46,8 @@ void PmergeMe::parseData(int ac, char **av) {
             _data.push_back(value);
         }
     }
+    if (_data.empty())
+        throw std::runtime_error("Error: No input provided");
 }
 
 int PmergeMe::stringToInt(std::string& str) const {
@@ -81,7 +82,8 @@ std::vector<int> PmergeMe::fordJohnsonSort(std::vector<int> inputVect) {
 
     if (inputVect.size() % 2 != 0) {
         straggler = inputVect.back();
-        inputVect.pop_back(); 
+        inputVect.pop_back();
+        hasStraggler = true;
     }
 
     for (size_t i = 0; i < inputVect.size(); i += 2) {
@@ -247,4 +249,12 @@ void PmergeMe::displayAfter() const {
         std::cout << "[...]";
     }
     std::cout << std::endl;
+}
+
+bool PmergeMe::isSorted() const {
+    std::vector<int> vect = _sortedData;
+    for (size_t i = 0; i < vect.size() - 2; ++i) {
+        if (vect[i] > vect[i + 1]) return false;
+    }
+    return true;
 }
