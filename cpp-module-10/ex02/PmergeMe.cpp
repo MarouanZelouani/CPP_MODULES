@@ -5,6 +5,10 @@ PmergeMe::~PmergeMe(){}
 PmergeMe::PmergeMe(const PmergeMe& obj){}
 PmergeMe& PmergeMe::operator=(const PmergeMe& obj){}
 
+void PmergeMe::sort() {
+    PmergeMe::fordJohnsonSort(_data);
+}
+
 void PmergeMe::parseData(int ac, char **av) {
     if (ac < 2) {
         throw std::runtime_error("Error: No input provided");
@@ -66,7 +70,7 @@ std::vector<int> PmergeMe::fordJohnsonSort(std::vector<int> inputVect) {
         inputVect.pop_back(); 
     }
 
-    for (int i = 0; i < inputVect.size(); ++i) {
+    for (size_t i = 0; i < inputVect.size(); i += 2) {
         int a = inputVect[i];
         int b = inputVect[i + 1];
 
@@ -85,7 +89,7 @@ std::vector<int> PmergeMe::fordJohnsonSort(std::vector<int> inputVect) {
 
     // insert first smaller element
     int firstSmall = smaller[0];
-    mainChain.insert(mainChain.begin(), 1);
+    mainChain.insert(mainChain.begin(), firstSmall);
 
     // build pending list with pair info
     std::vector<Pair> pending;
@@ -104,10 +108,129 @@ std::vector<int> PmergeMe::fordJohnsonSort(std::vector<int> inputVect) {
     }
 
     // generate jacobsthal insertion order
-    std::vector<int> insertionOrder = generateInsertionOrder(pending.size());
+    if (!pending.empty()) {
+        std::vector<size_t> insertionOrder = generateInsertionOrder(pending.size());
 
-    // insert pending elements
-    for (int i = 0; i < insertionOrder.size(); ++i) {
-        
+        for (size_t i = 0; i < insertionOrder.size(); ++i) {
+            size_t index = insertionOrder[i];
+            int element = pending[index].value;
+            size_t maxPos = pending[index].pair_idx;
+            
+            // binary search for insertion position
+            size_t insertPos = binarySearchInsert(mainChain, element, 0, maxPos);
+            
+            // insert the element
+            mainChain.insert(mainChain.begin() + insertPos, element);
+            
+            // update pair_idx for all remaining pending elements
+            for (size_t j = 0; j < pending.size(); ++j) {
+                if (pending[j].pair_idx >= insertPos) {
+                    pending[j].pair_idx++;
+                }
+            }
+        }
     }
+
+    return mainChain;
+}
+
+size_t PmergeMe::jacobsthal(size_t n) const {
+    if (n == 0)
+        return 0;
+    if (n == 1)
+        return 1;
+    
+    // Iterative calculation: J(n) = J(n-1) + 2*J(n-2)
+    size_t j0 = 0;
+    size_t j1 = 1;
+    
+    for (size_t i = 2; i <= n; ++i) {
+        size_t next = j1 + 2 * j0;
+        j0 = j1;
+        j1 = next;
+    }
+    
+    return j1;
+}
+
+std::vector<size_t> PmergeMe::generateInsertionOrder(size_t pendingSize) {
+    std::vector<size_t> order;
+    
+    if (pendingSize == 0)
+        return order;
+    
+    // special case: first element always goes first
+    order.push_back(0);
+    
+    if (pendingSize == 1)
+        return order;
+    
+    // generate jacobsthal numbers until we exceed pendingSize
+    std::vector<size_t> jacobsthalNums;
+    size_t k = 3; // start from J(3)
+    
+    while (true) {
+        size_t jk = jacobsthal(k);
+        if (jk >= pendingSize) {
+            jacobsthalNums.push_back(pendingSize);
+            break;
+        }
+        jacobsthalNums.push_back(jk);
+        k++;
+    }
+    
+    // build insertion order: within each range, insert in reverse
+    size_t prevJacob = 1;
+    
+    for (size_t i = 0; i < jacobsthalNums.size(); ++i) {
+        size_t jacob = jacobsthalNums[i];
+        
+        // insert from jacob down to prevJacob + 1 (in reverse)
+        for (size_t pos = jacob; pos > prevJacob; --pos) {
+            order.push_back(pos - 1); // convert to 0-indexed
+        }
+        
+        prevJacob = jacob;
+    }
+    
+    return order;
+}
+
+size_t PmergeMe::binarySearchInsert(const std::vector<int>& vec, int value, size_t start, size_t end) const {
+    size_t left = start;
+    size_t right = end;
+    
+    while (left < right) {
+        size_t mid = left + (right - left) / 2;
+        
+        if (vec[mid] < value) {
+            left = mid + 1;
+        } else {
+            right = mid;
+        }
+    }
+    
+    return left;
+}
+
+void PmergeMe::displayBefore() const {
+    std::cout << "Before: ";
+    for (size_t i = 0; i < _data.size() && i < 5; ++i) {
+        std::cout << _data[i] << " ";
+    }
+    if (_data.size() > 5) {
+        std::cout << "[...]";
+    }
+    std::cout << std::endl;
+}
+
+void PmergeMe::displayAfter() const {
+    std::cout << "After:  ";
+    for (size_t i = 0; i < _sortedData.size() && i < 5; ++i) {
+        std::cout << _sortedData[i] << " ";
+    }
+    if (_sortedData.size() > 5) {
+        std::cout << "[...]";
+    }
+    std::cout << std::endl;
 }
