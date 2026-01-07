@@ -141,18 +141,18 @@ std::vector<Item*> PmergeMe::fordJohnsonSort(std::vector<Item*> input) {
             larger.push_back(a);
             smaller.push_back(b);
 
-            // if (b->pair == NULL) {
+            if (b->pair == NULL) {
                 b->pair = a;
                 a->pair = b;
-            // }
+            }
         } else {
             larger.push_back(b);
             smaller.push_back(a);
 
-            // if (a->pair == NULL) {
+            if (a->pair == NULL) {
                 a->pair = b;
                 b->pair = a;
-            // }
+            }
         }
         
     }
@@ -203,8 +203,16 @@ std::vector<Item*> PmergeMe::fordJohnsonSort(std::vector<Item*> input) {
 
 std::vector<size_t> PmergeMe::generateInsertionOrder(size_t n) {
     std::vector<size_t> order;
-    if (n <= 1)
+    
+    if (n == 0)
         return order;
+    if (n == 1) {
+        order.push_back(0);  // ← Add this!
+        return order;
+    }
+    
+    // if (n <= 1)
+    //     return order;
 
     size_t prev = 1;
     size_t k = 3;
