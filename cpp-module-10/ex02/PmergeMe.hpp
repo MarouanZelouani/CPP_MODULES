@@ -9,19 +9,25 @@
 #include <cctype>
 #include <ctime>
 #include <deque>
+#include <iomanip>
 
-struct Pair {
+struct Item {
     int value;
-    size_t pair_idx;
+    Item* pair;
+
+    Item(int value, Item* pair);
 };
 
 class PmergeMe {
 private:
-    std::vector<int> _data;
-    std::vector<int> _sortedData;
+    std::vector<Item*> _data;
+    std::vector<Item*> _sortedData;
 
-    // std::deque<int> _dataQ;
-    // std::deque<int> _sortedDataQ;
+    std::deque<Item*> _dataQ;
+    std::deque<Item*> _sortedDataQ;
+
+    double _durationForDeque;
+    double _durationForVector;
 
 public:
     PmergeMe();
@@ -29,21 +35,26 @@ public:
     PmergeMe(const PmergeMe& obj);
     PmergeMe& operator=(const PmergeMe& obj);
 
-    void parseData(int ac, char **av);
     void sort();
-    void displayBefore() const;
-    void displayAfter() const;
-    
-    const std::vector<int>& getData() const;
-    const std::vector<int>& getSortedData() const;
+    void parseData(int ac, char **av);
+    void displayResult() const;
 
-   bool isSorted() const;
+    const std::vector<Item*>& getData() const;
+    const std::vector<Item*>& getSortedData() const;
+
+    bool isSorted() const;
+
 private:
-    std::vector<int> fordJohnsonSort(std::vector<int> inputVect);
-    // std::deque<int> fordJohnsonSort(std::deque<int> inputVect);
-    
     int stringToInt(std::string& str) const;
     size_t jacobsthal(size_t n) const;
-    std::vector<size_t> generateInsertionOrder(size_t pendingSize);
-    size_t binarySearchInsert(const std::vector<int>& vec, int value, size_t start, size_t end) const;
+
+    // vector sorting methods 
+    std::vector<Item*> fordJohnsonSort(std::vector<Item*> input);
+    std::vector<size_t> generateInsertionOrder(size_t n);
+    size_t binarySearchInsert(const std::vector<Item*>& vec, Item* Item, size_t start, size_t end) const;
+
+    // deque sorting methods
+    std::deque<Item*> fordJohnsonSortDeque(std::deque<Item*> input);
+    std::deque<size_t> generateInsertionOrderDeque(size_t n);
+    size_t binarySearchInsertDeque(const std::deque<Item*>& vec, Item* Item, size_t start, size_t end) const;
 };
