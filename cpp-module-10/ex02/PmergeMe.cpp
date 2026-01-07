@@ -8,7 +8,7 @@ PmergeMe::~PmergeMe() {
     if (!_data.empty()) {
         for (size_t i = 0; i < _data.size(); ++i) {
             delete _data[i];
-            delete _dataQ[i];
+            // delete _dataQ[i];
         }
     }
     _data.clear();
@@ -58,7 +58,7 @@ size_t PmergeMe::jacobsthal(size_t n) const {
 }
 
 bool PmergeMe::isSorted() const {
-    std::deque<Item*> vect = _sortedDataQ;
+    std::vector<Item*> vect = _sortedData;
     for (size_t i = 0; i < vect.size() - 1; ++i) {
         if (vect[i]->value > vect[i + 1]->value) return false;
     }
@@ -141,19 +141,38 @@ std::vector<Item*> PmergeMe::fordJohnsonSort(std::vector<Item*> input) {
             larger.push_back(a);
             smaller.push_back(b);
 
-            if (b->pair == NULL)
+            // if (b->pair == NULL) {
                 b->pair = a;
+                a->pair = b;
+            // }
         } else {
             larger.push_back(b);
             smaller.push_back(a);
 
-            if (a->pair == NULL)
+            // if (a->pair == NULL) {
                 a->pair = b;
+                b->pair = a;
+            // }
         }
+        
     }
 
     std::vector<Item*> mainChain = PmergeMe::fordJohnsonSort(larger);
-    std::vector<Item*> pending = smaller;
+
+
+    if (!mainChain.empty() && !smaller.empty()) {
+        Item* firstLarger = mainChain[0];
+        // Find its pair in smaller group
+        for (size_t i = 0; i < smaller.size(); ++i) {
+            if (smaller[i] == firstLarger->pair) {
+                mainChain.insert(mainChain.begin(), smaller[i]);
+                smaller.erase(smaller.begin() + i);
+                break;
+            }
+        }
+    }
+
+    std::vector<Item*> pending(smaller.begin(), smaller.end());
 
     std::vector<size_t> order = generateInsertionOrder(pending.size());
     for (size_t i = 0; i < order.size(); ++i) {
@@ -164,7 +183,7 @@ std::vector<Item*> PmergeMe::fordJohnsonSort(std::vector<Item*> input) {
         if (a) {
             for (size_t j = 0; j < mainChain.size(); ++j) {
                 if (mainChain[j] == a) {
-                    rightBound = j;
+                    rightBound = j + 1;
                     break;
                 }
             }
@@ -354,6 +373,8 @@ void PmergeMe::displayResult() const {
     if (_sortedData.size() > 5) {
         std::cout << "[...]";
     }
+
+    
     std::cout << std::endl;
     std::cout << "Time to process a range of " <<  _data.size();
     std::cout <<  " elements with std::vector : ";
@@ -363,5 +384,7 @@ void PmergeMe::displayResult() const {
     std::cout <<  " elements with std::deque : ";
     std::cout << std::fixed << std::setprecision(2) << _durationForDeque;
     std::cout << " us" << std::endl;
+
+    std::cout << _data.size() << " " << _sortedData.size() << "\n";
 }
 
