@@ -38,10 +38,6 @@ public:
     void sort();
     void parseData(int ac, char **av);
     void displayResult() const;
-
-    const std::vector<Item*>& getData() const;
-    const std::vector<Item*>& getSortedData() const;
-
     bool isSorted() const;
 
 private:

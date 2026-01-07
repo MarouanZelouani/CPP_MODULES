@@ -8,6 +8,7 @@ PmergeMe::~PmergeMe() {
     if (!_data.empty()) {
         for (size_t i = 0; i < _data.size(); ++i) {
             delete _data[i];
+            delete _dataQ[i];
         }
     }
     _data.clear();
@@ -37,13 +38,6 @@ void PmergeMe::sort() {
     _durationForDeque = double(std::clock() - start) * 1e6 / CLOCKS_PER_SEC;
 }
 
-const std::vector<Item*>& PmergeMe::getData() const {
-    return _data;
-}
-const std::vector<Item*>& PmergeMe::getSortedData() const {
-    return _sortedData;
-}
-
 size_t PmergeMe::jacobsthal(size_t n) const {
     if (n == 0)
         return 0;
@@ -64,7 +58,7 @@ size_t PmergeMe::jacobsthal(size_t n) const {
 }
 
 bool PmergeMe::isSorted() const {
-    std::vector<Item*> vect = _sortedData;
+    std::deque<Item*> vect = _sortedDataQ;
     for (size_t i = 0; i < vect.size() - 1; ++i) {
         if (vect[i]->value > vect[i + 1]->value) return false;
     }
@@ -96,8 +90,9 @@ void PmergeMe::parseData(int ac, char **av) {
             int value = stringToInt(token);
             
             Item* item = new Item(value, NULL);
+            Item* itemQ = new Item(value, NULL);
             _data.push_back(item);
-            _dataQ.push_back(item);
+            _dataQ.push_back(itemQ);
         }
     }
     if (_data.empty())
