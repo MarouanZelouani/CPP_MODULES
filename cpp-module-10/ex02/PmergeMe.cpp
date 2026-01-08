@@ -8,11 +8,14 @@ PmergeMe::~PmergeMe() {
     if (!_data.empty()) {
         for (size_t i = 0; i < _data.size(); ++i) {
             delete _data[i];
-            // delete _dataQ[i];
+            delete _dataQ[i];
         }
     }
     _data.clear();
     _sortedData.clear();
+
+    _dataQ.clear();
+    _sortedDataQ.clear();
 }
 
 PmergeMe::PmergeMe(const PmergeMe& obj) { *this = obj; }
@@ -57,10 +60,20 @@ size_t PmergeMe::jacobsthal(size_t n) const {
     return j1;
 }
 
-bool PmergeMe::isSorted() const {
-    std::vector<Item*> vect = _sortedData;
-    for (size_t i = 0; i < vect.size() - 1; ++i) {
-        if (vect[i]->value > vect[i + 1]->value) return false;
+bool PmergeMe::isValidPositiveInteger(const std::string& token) const {
+    if (token.empty())
+        return false;
+
+    size_t i = 0;
+    if (token[0] == '+') {
+        if (token.size() == 1)
+            return false;
+        i = 1;
+    }
+
+    for (; i < token.size(); ++i) {
+        if (!std::isdigit(token[i]))
+            return false;
     }
     return true;
 }
@@ -82,10 +95,9 @@ void PmergeMe::parseData(int ac, char **av) {
         
         while (ss >> token) {
             
-            // add this 
-            // if (!isValidPositiveInteger(token)) {
-            //     throw std::runtime_error("Error: Invalid input: '" + token + "'");
-            // }
+            if (!isValidPositiveInteger(token)) {
+                throw std::runtime_error("Error: Invalid input: '" + token + "'");
+            }
     
             int value = stringToInt(token);
             
@@ -118,7 +130,6 @@ int PmergeMe::stringToInt(std::string& str) const {
 // ========================= SORTING FOR VECTOR ================================
 
 std::vector<Item*> PmergeMe::fordJohnsonSort(std::vector<Item*> input) {
-    
     if (input.size() == 0)
         return std::vector<Item*>();
     if (input.size() == 1)
@@ -159,10 +170,9 @@ std::vector<Item*> PmergeMe::fordJohnsonSort(std::vector<Item*> input) {
 
     std::vector<Item*> mainChain = PmergeMe::fordJohnsonSort(larger);
 
-
     if (!mainChain.empty() && !smaller.empty()) {
         Item* firstLarger = mainChain[0];
-        // Find its pair in smaller group
+
         for (size_t i = 0; i < smaller.size(); ++i) {
             if (smaller[i] == firstLarger->pair) {
                 mainChain.insert(mainChain.begin(), smaller[i]);
@@ -173,7 +183,6 @@ std::vector<Item*> PmergeMe::fordJohnsonSort(std::vector<Item*> input) {
     }
 
     std::vector<Item*> pending(smaller.begin(), smaller.end());
-
     std::vector<size_t> order = generateInsertionOrder(pending.size());
     for (size_t i = 0; i < order.size(); ++i) {
         Item* b = pending[order[i]];
@@ -207,14 +216,11 @@ std::vector<size_t> PmergeMe::generateInsertionOrder(size_t n) {
     if (n == 0)
         return order;
     if (n == 1) {
-        order.push_back(0);  // ← Add this!
+        order.push_back(0);
         return order;
     }
-    
-    // if (n <= 1)
-    //     return order;
 
-    size_t prev = 1;
+    size_t prev = 0;
     size_t k = 3;
 
     while (true) {
@@ -255,7 +261,6 @@ size_t PmergeMe::binarySearchInsert(const std::vector<Item*>& vec, Item* item, s
 // ========================= SORTING FOR DEQUE =============================
 
 std::deque<Item*> PmergeMe::fordJohnsonSortDeque(std::deque<Item*> input) {
-    
     if (input.size() == 0)
         return std::deque<Item*>();
     if (input.size() == 1)
@@ -278,21 +283,37 @@ std::deque<Item*> PmergeMe::fordJohnsonSortDeque(std::deque<Item*> input) {
             larger.push_back(a);
             smaller.push_back(b);
 
-            if (b->pair == NULL)
+            if (b->pair == NULL) {
                 b->pair = a;
+                a->pair = b;
+            }
         } else {
             larger.push_back(b);
             smaller.push_back(a);
 
-            if (a->pair == NULL)
+            if (a->pair == NULL) {
                 a->pair = b;
+                b->pair = a;
+            }
         }
-
+        
     }
 
     std::deque<Item*> mainChain = PmergeMe::fordJohnsonSortDeque(larger);
-    std::deque<Item*> pending = smaller;
 
+    if (!mainChain.empty() && !smaller.empty()) {
+        Item* firstLarger = mainChain[0];
+
+        for (size_t i = 0; i < smaller.size(); ++i) {
+            if (smaller[i] == firstLarger->pair) {
+                mainChain.insert(mainChain.begin(), smaller[i]);
+                smaller.erase(smaller.begin() + i);
+                break;
+            }
+        }
+    }
+
+    std::deque<Item*> pending(smaller.begin(), smaller.end());
     std::deque<size_t> order = generateInsertionOrderDeque(pending.size());
     for (size_t i = 0; i < order.size(); ++i) {
         Item* b = pending[order[i]];
@@ -302,7 +323,7 @@ std::deque<Item*> PmergeMe::fordJohnsonSortDeque(std::deque<Item*> input) {
         if (a) {
             for (size_t j = 0; j < mainChain.size(); ++j) {
                 if (mainChain[j] == a) {
-                    rightBound = j;
+                    rightBound = j + 1;
                     break;
                 }
             }
@@ -320,12 +341,18 @@ std::deque<Item*> PmergeMe::fordJohnsonSortDeque(std::deque<Item*> input) {
     return mainChain;
 }
 
+
 std::deque<size_t> PmergeMe::generateInsertionOrderDeque(size_t n) {
     std::deque<size_t> order;
-    if (n <= 1)
+    
+    if (n == 0)
         return order;
+    if (n == 1) {
+        order.push_back(0);
+        return order;
+    }
 
-    size_t prev = 1;
+    size_t prev = 0;
     size_t k = 3;
 
     while (true) {
@@ -393,6 +420,28 @@ void PmergeMe::displayResult() const {
     std::cout << std::fixed << std::setprecision(2) << _durationForDeque;
     std::cout << " us" << std::endl;
 
-    std::cout << _data.size() << " " << _sortedData.size() << "\n";
+    // std::cout << _data.size() << " " << _sortedData.size() << "\n";
 }
 
+bool PmergeMe::isVectorSorted() const {
+    if (_sortedData.size() < 2)
+        return true;
+
+    for (size_t i = 1; i < _sortedData.size(); ++i) {
+        if (_sortedData[i - 1]->value > _sortedData[i]->value)
+            return false;
+    }
+    return true;
+}
+
+
+bool PmergeMe::isDequeSorted() const {
+    if (_sortedDataQ.size() < 2)
+        return true;
+
+    for (size_t i = 1; i < _sortedDataQ.size(); ++i) {
+        if (_sortedDataQ[i - 1]->value > _sortedDataQ[i]->value)
+            return false;
+    }
+    return true;
+}

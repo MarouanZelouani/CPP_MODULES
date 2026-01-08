@@ -10,8 +10,10 @@ int main(int ac, char **av) {
 
         sorter.displayResult();  
         
-        if (sorter.isSorted()) std::cout << "OK\n";
-        else std::cout << "KO!\n";
+        // if (sorter.isVectorSorted() && sorter.isDequeSorted())
+        //     std::cout << "=======> OK\n";
+        // else 
+        //     std::cout << "=======> KO!\n";
         
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;

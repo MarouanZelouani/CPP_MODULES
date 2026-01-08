@@ -38,11 +38,14 @@ public:
     void sort();
     void parseData(int ac, char **av);
     void displayResult() const;
-    bool isSorted() const;
+
+    bool isVectorSorted() const;
+    bool isDequeSorted() const;
 
 private:
     int stringToInt(std::string& str) const;
     size_t jacobsthal(size_t n) const;
+    bool isValidPositiveInteger(const std::string& token) const;
 
     // vector sorting methods 
     std::vector<Item*> fordJohnsonSort(std::vector<Item*> input);
