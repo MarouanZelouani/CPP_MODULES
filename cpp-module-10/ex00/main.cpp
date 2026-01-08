@@ -10,7 +10,7 @@ int main (int ac, char** av) {
         BitcoinExchange exchange;
         exchange.processInput(av[1]);
     } catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;
+        std::cout << e.what() << std::endl;
         return 1;
     }
     return 0;

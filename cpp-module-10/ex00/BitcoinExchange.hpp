@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <map>
+#include <cctype>
 
 struct Date {
     int day;
@@ -17,6 +18,7 @@ struct Date {
 class BitcoinExchange {
 private:
     std::map<Date, double> _database;
+    int _currentYear;
 
 public:
     BitcoinExchange();

@@ -1,6 +1,9 @@
 #include "BitcoinExchange.hpp"
 
 BitcoinExchange::BitcoinExchange() {
+    time_t now = time(0);
+    tm* current_time = localtime(&now);
+    _currentYear = current_time->tm_year + 1900;
     loadDatabase("data.csv");
 }
 
@@ -13,6 +16,7 @@ BitcoinExchange::BitcoinExchange(const BitcoinExchange& obj) {
 BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& obj) {
     if (this != &obj) {
         _database = obj._database;
+        _currentYear = obj._currentYear;
     }
     return *this;
 }
@@ -125,13 +129,10 @@ bool Date::operator<(const Date& other) const {
 }
 
 bool BitcoinExchange::isValidDate(Date date) const {
-    if (date.month < 1 || date.month > 12 || date.day < 1 || date.day < 1)
+    if (date.month < 1 || date.month > 12 || date.day < 1)
         return false;
 
-    time_t now = time(0);
-    tm* current_time = localtime(&now);
-    int current_year = current_time->tm_year + 1900;
-    if (date.year > current_year || date.year < 2000)
+    if (date.year > _currentYear || date.year < 2009)
         return false;
 
     int days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -158,29 +159,29 @@ void BitcoinExchange::processInput(const std::string& filename) {
         std::string dateStr, valueStr;
         
         if (!parseLine(line, '|', dateStr, valueStr)) {
-            std::cerr << "Error: bad input => " << line << std::endl;
+            std::cout << "Error: bad input => " << line << std::endl;
             continue;
         }
         
         Date date;
         if (!parseDate(dateStr, date)) {
-            std::cerr << "Error: bad input => " << dateStr << std::endl;
+            std::cout << "Error: bad input => " << dateStr << std::endl;
             continue;
         }
         
         double value;
         if (!parseValue(valueStr, value)) {
-            std::cerr << "Error: bad input => " << valueStr << std::endl;
+            std::cout << "Error: bad input => " << valueStr << std::endl;
             continue;
         }
         
         if (value < 0) {
-            std::cerr << "Error: not a positive number." << std::endl;
+            std::cout << "Error: not a positive number." << std::endl;
             continue;
         }
         
         if (value > 1000) {
-            std::cerr << "Error: too large a number." << std::endl;
+            std::cout << "Error: too large a number." << std::endl;
             continue;
         }
         
