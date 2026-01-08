@@ -16,7 +16,7 @@ struct Date {
 
 class BitcoinExchange {
 private:
-    std::map<Date, double> csv_data_;
+    std::map<Date, double> _database;
 
 public:
     BitcoinExchange();
@@ -24,14 +24,22 @@ public:
     BitcoinExchange(const BitcoinExchange& obj);
     BitcoinExchange& operator=(const BitcoinExchange& obj);
 
-    void exchange(std::string filename) const;
-    void exchange(Date date, double value) const;
-
+    void processInput(const std::string& filename);
+    
 private:
-    // Helper methods
-    std::map<Date, double> ParseFile(std::string filename, char sep, int flag) const;
-    Date ParseDate(std::string string_date) const;
-    bool isValideDate(Date date) const;
+    void loadDatabase(const std::string& filename);
+    
+    // parsing
+    bool parseLine(const std::string& line, char separator, 
+        std::string& datestr, std::string& valuestr);
+    bool parseDate(const std::string& datestr, Date& date);
+    bool parseValue(const std::string& valuestr, double& value);
+    
+    double getExchangeRate(const Date& date) const;
+    void displayExchange(const Date& date, double value) const;
+    
+    bool isValidDate(Date date) const;
+    std::string trim(const std::string& str) const;
 };
 
 std::ostream& operator<<(std::ostream& os, const Date& date);

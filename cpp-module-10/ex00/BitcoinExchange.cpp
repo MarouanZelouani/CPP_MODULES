@@ -1,7 +1,7 @@
 #include "BitcoinExchange.hpp"
 
 BitcoinExchange::BitcoinExchange() {
-    csv_data_ = ParseFile("data.csv", ',', 0);
+    loadDatabase("data.csv");
 }
 
 BitcoinExchange::~BitcoinExchange() {}
@@ -12,25 +12,101 @@ BitcoinExchange::BitcoinExchange(const BitcoinExchange& obj) {
 
 BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& obj) {
     if (this != &obj) {
-        csv_data_ = obj.csv_data_;
+        _database = obj._database;
     }
     return *this;
 }
 
-Date BitcoinExchange::ParseDate(std::string string_date) const {
-   Date date;
-   char delimiter;
-   
-   std::stringstream ss(string_date);
-   ss >> date.year >> delimiter >> date.month >> delimiter >> date.day;
-
-   return date;
-}
 
 std::ostream& operator<<(std::ostream& os, const Date& date) {
-    os << date.year << "-" << date.month << "-" << date.day;
+    os << date.year << "-";
+    if (date.month < 10) os << "0";
+    os << date.month << "-";
+    if (date.day < 10) os << "0";
+    os << date.day;
     return os;
 }
+
+
+bool BitcoinExchange::parseLine(const std::string& line, char separator, std::string& datestr, std::string& valuestr) {
+    size_t pos = line.find(separator);
+
+    if (pos == std::string::npos)
+        return false;
+
+    datestr = trim(line.substr(0, pos));
+    valuestr = trim(line.substr(pos + 1));
+
+    return !datestr.empty() && !valuestr.empty();
+}
+
+bool BitcoinExchange::parseDate(const std::string& datestr, Date& date) {
+    std::stringstream ss(datestr);
+    char delimiter1, delimiter2;
+
+    ss >> date.year >> delimiter1 >> date.month >> delimiter2 >> date.day;
+
+    if (ss.fail() || !ss.eof() || delimiter1 != '-' || delimiter2 != '-')
+        return false;
+
+    return isValidDate(date);
+}
+
+bool BitcoinExchange::parseValue(const std::string& valuestr, double& value) {
+    std::stringstream ss(valuestr);
+    ss >> value;
+
+    if (ss.fail())
+        return false;
+    
+    std::string remaining;
+    ss >> remaining;
+    if (!remaining.empty())
+        return false;
+    
+    return true;
+}
+
+void BitcoinExchange::loadDatabase(const std::string& filename) {
+    std::ifstream file(filename.c_str());
+    
+    if (!file.is_open())
+        throw std::runtime_error("Error: could not open file.");
+    
+    std::string line;
+    std::getline(file, line);
+    
+    while (std::getline(file, line)) {
+        std::string dateStr, valueStr;
+        
+        if (!parseLine(line, ',', dateStr, valueStr)) {
+            file.close();
+            throw std::runtime_error("Error: invalid database format!");
+        }
+        
+        Date date;
+        if (!parseDate(dateStr, date)) {
+            file.close();
+            throw std::runtime_error("Error: invalid date in database!");
+        }
+        
+        double value;
+        if (!parseValue(valueStr, value)) {
+            file.close();
+            throw std::runtime_error("Error: invalid value in database!");
+        }
+        
+        _database[date] = value;
+    }
+    
+    file.close();
+    
+    if (_database.empty()) {
+        throw std::runtime_error("Error: empty database!");
+    }
+}
+
+
 
 bool isLeapYear(int year) {
     if (year % 4 == 0) {
@@ -48,13 +124,7 @@ bool Date::operator<(const Date& other) const {
     return day < other.day;
 }
 
-// check the month (between 1 and 12)
-// check Day
-// - should be positive
-// - determine day in the month
-// - check for leap year is feb
-// check year range (2000 - the actual year)
-bool BitcoinExchange::isValideDate(Date date) const {
+bool BitcoinExchange::isValidDate(Date date) const {
     if (date.month < 1 || date.month > 12 || date.day < 1 || date.day < 1)
         return false;
 
@@ -73,81 +143,87 @@ bool BitcoinExchange::isValideDate(Date date) const {
     return true;
 }
 
-std::map<Date, double> BitcoinExchange::ParseFile(std::string filename, char sep, int flag) const {
+void BitcoinExchange::processInput(const std::string& filename) {
     std::ifstream file(filename.c_str());
-    std::map<Date, double> container;
     
     if (!file.is_open()) {
-        std::cerr << "Error: could not open file." << std::endl;
-        return container;
+        std::cerr << "Error: could not open file!" << std::endl;
+        return;
     }
     
     std::string line;
-    std::getline(file, line); // skip the first line
-
+    std::getline(file, line);
+    
     while (std::getline(file, line)) {
-        bool valid = true; 
-        size_t pos = line.find(sep);
+        std::string dateStr, valueStr;
         
-        if (pos == std::string::npos)
-            std::cerr << "Error: invalid separator." << std::endl;
-
-        std::string sub1 = line.substr(0, pos);
-        std::string sub2 = line.substr(pos + 1);
-        
-        Date date = ParseDate(sub1);
-        if (!isValideDate(date)) {
-            std::cerr << "Error: bad input => " << sub1 << std::endl;
-            valid = false;
+        if (!parseLine(line, '|', dateStr, valueStr)) {
+            std::cerr << "Error: bad input => " << line << std::endl;
+            continue;
         }
         
-        std::stringstream ss(sub2);
+        Date date;
+        if (!parseDate(dateStr, date)) {
+            std::cerr << "Error: bad input => " << dateStr << std::endl;
+            continue;
+        }
+        
         double value;
-        ss >> value;
-
-        if (ss.fail()) {
-            std::cerr << "Error: bad input => " << std::endl;
-            valid = false;
-        } else if (value < 0 && flag == 1) {
+        if (!parseValue(valueStr, value)) {
+            std::cerr << "Error: bad input => " << valueStr << std::endl;
+            continue;
+        }
+        
+        if (value < 0) {
             std::cerr << "Error: not a positive number." << std::endl;
-            valid = false;
-        }
-        else if (value > 1000 && flag == 1) {
-            std::cerr << "Error: too large a number." << std::endl; 
-            valid = false;
-            std::cout << "dsdsd=> " << value << sub2 << "\n";
+            continue;
         }
         
-        if (flag == 0 && !valid) {
-            file.close();
-            throw std::runtime_error("Error: csv parsing problem!");
-        } 
+        if (value > 1000) {
+            std::cerr << "Error: too large a number." << std::endl;
+            continue;
+        }
         
-        if (flag == 1 && valid)
-            exchange(date, value);
-        else 
-            container[date] = value;
-
-        valid = true;
+        displayExchange(date, value);
     }
-
+    
     file.close();
-    return container;
 }
 
-void BitcoinExchange::exchange(Date date, double value) const {
-    double exchange_rate;
-    std::map<Date, double>::const_iterator it_upper = csv_data_.upper_bound(date);
-
-    if (it_upper != csv_data_.begin()) {
-        --it_upper;
-        exchange_rate = it_upper->second;
-        std::cout << date << " => " << value  << " = " << value * exchange_rate << std::endl; 
-    } else 
-        std::cout << "No data availble for date: " << date << " \n";
+double BitcoinExchange::getExchangeRate(const Date& date) const {
+    std::map<Date, double>::const_iterator it = _database.upper_bound(date);
+    
+    if (it == _database.begin()) {
+        return -1;
+    }
+    
+    --it;
+    return it->second;
 }
 
 
-void BitcoinExchange::exchange(std::string filename) const {
-    (void)ParseFile(filename, '|', 1);
+void BitcoinExchange::displayExchange(const Date& date, double value) const {
+    double rate = getExchangeRate(date);
+    
+    if (rate < 0) {
+        std::cout << "Error: no data available for date => " << date << std::endl;
+        return;
+    }
+    
+    std::cout << date << " => " << value << " = " << (value * rate) << std::endl;
+}
+
+std::string BitcoinExchange::trim(const std::string& str) const {
+    size_t start = 0;
+    size_t end = str.length();
+    
+    while (start < end && std::isspace(str[start])) {
+        ++start;
+    }
+    
+    while (end > start && std::isspace(str[end - 1])) {
+        --end;
+    }
+    
+    return str.substr(start, end - start);
 }
